@@ -10,5 +10,6 @@ resources:
   - ./intel-device-plugin-gpu/ks.yaml
   - ./local-path-provisioner/ks.yaml
   - ./metrics-server/ks.yaml
+  - ./node-feature-discovery/ks.yaml
   - ./onepassword-connect/ks.yaml
   - ./reloader/ks.yaml
