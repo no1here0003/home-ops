@@ -1,0 +1,104 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: &app lidarr
+  namespace: downloads
+spec:
+  interval: 10m
+  chart:
+    spec:
+      chart: app-template
+      version: 1.5.1
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s-charts
+        namespace: flux-system
+  maxHistory: 3
+  install:
+    remediation:
+      retries: 3
+
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+
+  dependsOn:
+    - name: longhorn
+      namespace: storage
+
+  uninstall:
+    keepHistory: false
+
+  values:
+
+    image:
+      repository: ghcr.io/onedr0p/lidarr-develop
+      tag: 1.4.2.3576@sha256:36ef4f94062be2aebde213ab2d1477f37bbb9557d5f893061a6530bb96150186
+
+    service:
+      main:
+        ports:
+          http:
+            port: 8686
+
+    ingress:
+      main:
+        enabled: true
+        ingressClassName: "nginx"
+        hosts:
+          - host: &host lidarr.${INTERNAL_DOMAIN}
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - hosts:
+              - *host
+            secretName: lidarr-tls
+
+    podSecurityContext:
+      runAsUser: 568
+      runAsGroup: 568
+      fsGroup: 568
+      fsGroupChangePolicy: "OnRootMismatch"
+      supplementalGroups:
+        - 44
+        - 105
+        - 100
+
+    persistence:
+
+      config:
+        enabled: true
+        existingClaim: lidarr-config
+
+      media:
+        enabled: true
+        type: custom
+        volumeSpec:
+          nfs:
+            server: "${NAS1_ADDR}"
+            path: /volume1/Media/Music
+        mountPath: /media
+
+      temp:
+        enabled: true
+        type: custom
+        volumeSpec:
+          nfs:
+            server: "${NAS1_ADDR}"
+            path: /volume1/temp
+        mountPath: /temp_dir
+
+    podAnnotations:
+      secret.reloader.stakater.com/reload: *app
+
+    resources:
+      requests:
+        cpu: 200m
+        memory: 700Mi
+      limits:
+        cpu: 500m
+        memory: 1Gi
+

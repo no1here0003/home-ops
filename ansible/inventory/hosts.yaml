@@ -1,0 +1,31 @@
+---
+kubernetes:
+  children:
+    master:
+      hosts:
+        nuc10i7-1:
+          ansible_user: kube
+          ansible_host: 192.168.10.152
+        nuc10i7-2:
+          ansible_user: kube
+          ansible_host: 192.168.10.104
+        nuc10i7-3:
+          ansible_user: kube
+          ansible_host: 192.168.10.100
+    worker:
+      hosts:
+        nuc11i7-1:
+          ansible_user: kube
+          ansible_host: 192.168.10.101
+        nuc11i7-2:
+          ansible_user: kube
+          ansible_host: 192.168.10.103
+        nuc13i7-1:
+          ansible_user: kube
+          ansible_host: 192.168.10.153
+        nuc13i7-2:
+          ansible_user: kube
+          ansible_host: 192.168.10.158
+        nuc13i7-3:
+          ansible_user: kube
+          ansible_host: 192.168.10.159
