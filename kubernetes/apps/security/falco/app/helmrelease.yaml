@@ -70,7 +70,7 @@ spec:
             pullPolicy: IfNotPresent
             registry: docker.io
             repository: falcosecurity/falco-driver-loader
-            tag: "0.35.1"
+            tag: "0.36.0"
 
     # -- Gvisor configuration. Based on your system you need to set the appropriate values.
     # Please, rembember to add pod tolerations and affinities in order to schedule the Falco pods in the gVisor enabled nodes.
