@@ -48,12 +48,13 @@ spec:
             fsGroupChangePolicy: "OnRootMismatch"
 
         containers:
-          image:
-            repository: ghcr.io/onedr0p/tautulli
-            tag: 2.13.1@sha256:0a995c25a9c56b609c80dedfd9432c006b0d4835bd4fa2ba911ed112b50c5034
+          main:
+            image:
+              repository: ghcr.io/onedr0p/tautulli
+              tag: 2.13.1@sha256:0a995c25a9c56b609c80dedfd9432c006b0d4835bd4fa2ba911ed112b50c5034
 
-          env:
-            TZ: "America/New_York"
+            env:
+              TZ: "America/New_York"
 
     service:
       main:
