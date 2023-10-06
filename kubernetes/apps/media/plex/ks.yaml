@@ -18,8 +18,9 @@ spec:
   healthChecks:
     - apiVersion: helm.toolkit.fluxcd.io/v2beta1
       kind: HelmRelease
-      name: plex
+      name: plex2
       namespace: media
   interval: 30m
   retryInterval: 1m
   timeout: 3m
+  wait: false

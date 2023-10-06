@@ -10,7 +10,7 @@ spec:
     spec:
       # renovate: registryUrl=https://bjw-s.github.io/helm-charts/
       chart: app-template
-      version: 1.5.1
+      version: 2.0.2
       sourceRef:
         kind: HelmRepository
         name: bjw-s-charts
@@ -32,20 +32,55 @@ spec:
       namespace: storage
 
   values:
+    controllers:
+      main:
+        type: statefulset
+        annotations:
+          reloader.stakater.com/auto: "true"
 
-    image:
-      repository: ghcr.io/onedr0p/plex-beta
-      tag: 1.32.7.7571-13cdc68dc@sha256:a9474ff865f654cee7069357ce52469ab2929abdc1133568ba07b5fe83d09e9f
+        statefulset:
+          volumeClaimTemplates:
+            - name: config
+              accessMode: ReadWriteOnce
+              size: 20Gi
+              storageClass: longhorn-plex
+              globalMounts:
+                - path: /config
 
-    # Plex needs to let go of the volume mount or it loads it read only.
-    strategy:
-      type: Recreate
+        pod:
+          enableServiceLinks: false
+          nodeSelector:
+            intel.feature.node.kubernetes.io/gpu: "true"
+          securityContext:
+            runAsUser: 568
+            runAsGroup: 568
+            fsGroup: 568
+            fsGroupChangePolicy: "OnRootMismatch"
+            supplementalGroups:
+              - 44
+              - 105
+              - 100
+              - 106
+              - 65539
 
-    env:
-      TZ: "America/New_York"
-      ADVERTISE_IP: "http://${PLEX_LB}:32410/"
-      HOSTNAME: "plex-cluster"
-      PLEX_CLAIM: ${PLEX_CLAIM}
+        containers:
+          main:
+            image:
+              repository: ghcr.io/onedr0p/plex-beta
+              tag: 1.32.7.7571-13cdc68dc@sha256:a9474ff865f654cee7069357ce52469ab2929abdc1133568ba07b5fe83d09e9f
+            env:
+              TZ: "America/New_York"
+              ADVERTISE_IP: "http://${PLEX_LB}:32410/"
+              HOSTNAME: "plex-cluster"
+              PLEX_CLAIM: ${PLEX_CLAIM}
+            resources:
+              requests:
+                gpu.intel.com/i915: 1
+                cpu: 1000m
+                memory: 16G
+              limits:
+                gpu.intel.com/i915: 1
+                memory: 64G
 
     service:
       main:
@@ -61,16 +96,6 @@ spec:
             targetPort: 32400
             protocol: TCP
 
-    podSecurityContext:
-      runAsUser: 568
-      runAsGroup: 568
-      fsGroup: 568
-      fsGroupChangePolicy: "OnRootMismatch"
-      supplementalGroups:
-        - 44
-        - 105
-        - 100
-
     ingress:
       main:
         enabled: true
@@ -84,72 +109,46 @@ spec:
           - host: &host "plex.${SECRET_DOMAIN}"
             paths:
               - path: /
-                pathType: Prefix
+                service:
+                  name: main
+                  port: http
         tls:
           - hosts:
               - *host
           - secretName: plex-tls-secret
 
     persistence:
-      config:
-        enabled: true
-        existingClaim: plex-config-v1
       media:
-        enabled: true
-        type: custom
-        volumeSpec:
-          nfs:
-            server: "${NAS1_ADDR}"
-            path: /volume1/Media
-        mountPath: /media
-        readOnly: true
+        type: nfs
+        server: "${NAS1_ADDR}"
+        path: /volume1/Media
+        globalMounts:
+          - path: /media
+
       media2:
-        enabled: true
-        type: custom
-        volumeSpec:
-          nfs:
-            server: "${NAS2_ADDR}"
-            path: /volume1/Media2
-        mountPath: /media2
-        readOnly: true
+        type: nfs
+        server: "${NAS2_ADDR}"
+        path: /volume1/Media2
+        globalMounts:
+          - path: /media2
+
       media3:
-        enabled: true
-        type: custom
-        volumeSpec:
-          nfs:
-            server: "${NAS3_ADDR}"
-            path: /volume1/Plex
-        mountPath: /media3
-        readOnly: true
+        type: nfs
+        server: "${NAS3_ADDR}"
+        path: /volume1/Plex
+        globalMounts:
+          - path: /media3
+
       backups:
-        enabled: true
-        type: custom
-        volumeSpec:
-          nfs:
-            server: "${NAS2_ADDR}"
-            path: /volume1/Kubernetes/plex
-        mountPath: /backups
-        readOnly: false
+        type: nfs
+        server: "${NAS2_ADDR}"
+        path: /volume1/Kubernetes/plex
+        globalMounts:
+          - path: /backups
+
       transcode:
-        enabled: true
         type: emptyDir
-        medium: Memory
+        globalMounts:
+          - path: /transcode
 
-    affinity:
-      nodeAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-          nodeSelectorTerms:
-            - matchExpressions:
-                - key: intel.feature.node.kubernetes.io/gpu
-                  operator: In
-                  values:
-                    - "true"
 
-    resources:
-      requests:
-        gpu.intel.com/i915: 1
-        cpu: 1000m
-        memory: 16G
-      limits:
-        gpu.intel.com/i915: 1
-        memory: 64G
