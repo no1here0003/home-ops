@@ -42,7 +42,7 @@ spec:
           volumeClaimTemplates:
             - name: config
               accessMode: ReadWriteOnce
-              size: 200Gi
+              size: 20Gi
               storageClass: longhorn-plex
               globalMounts:
                 - path: /config
