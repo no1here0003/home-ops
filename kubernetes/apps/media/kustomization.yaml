@@ -4,5 +4,6 @@ kind: Kustomization
 resources:
   - ./namespace.yaml
   - ./plex/ks.yaml
+  - ./plex2/ks.yaml
   - ./overseerr/ks.yaml
   - ./tautulli/ks.yaml
