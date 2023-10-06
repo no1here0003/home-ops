@@ -27,7 +27,7 @@ spec:
 
   values:
 
-    controller:
+    controllers:
       main:
         type: statefulset
         annotations:
