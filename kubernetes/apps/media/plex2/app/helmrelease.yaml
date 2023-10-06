@@ -106,14 +106,16 @@ spec:
           cert-manager.io/cluster-issuer: letsencrypt-production
           nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
         hosts:
-          - host: &host "plex.${SECRET_DOMAIN}"
+          - host: &host "plex2.${SECRET_DOMAIN}"
             paths:
               - path: /
-                pathType: Prefix
+                service:
+                  name: main
+                  port: http
         tls:
           - hosts:
               - *host
-          - secretName: plex-tls-secret
+          - secretName: plex2-tls-secret
 
     persistence:
       media:
