@@ -3,9 +3,9 @@ kind: PersistentVolumeClaim
 metadata:
   labels:
     app.kubernetes.io/component: main
-    app.kubernetes.io/instance: plex
-    app.kubernetes.io/name: plex
-  name: config-plex-0
+    app.kubernetes.io/instance: tautulli
+    app.kubernetes.io/name: tautulli
+  name: config-tautulli-0
   namespace: media
 spec:
   accessModes:
@@ -13,4 +13,4 @@ spec:
   resources:
     requests:
       storage: 200Gi
-  storageClassName: longhorn-plex
+  storageClassName: longhorn-config
