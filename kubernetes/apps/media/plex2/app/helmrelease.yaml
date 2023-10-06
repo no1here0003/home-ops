@@ -39,7 +39,7 @@ spec:
           reloader.stakater.com/auto: "true"
 
         statefulset:
-          volumeClaimTemplate:
+          volumeClaimTemplates:
             - name: config
               accessMode: ReadWriteOnce
               size: 20Gi
