@@ -87,7 +87,7 @@ spec:
         enabled: true
         type: LoadBalancer
         annotations:
-          io.cilium/lb-ipam-ips: ${PLEX_LB}
+          #io.cilium/lb-ipam-ips: ${PLEX_LB}
           metallb.universe.tf/allow-shared-ip: plex
         externalTrafficPolicy: Cluster
         ports:
