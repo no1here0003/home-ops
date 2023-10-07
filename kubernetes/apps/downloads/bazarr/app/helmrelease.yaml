@@ -10,16 +10,12 @@ spec:
     spec:
       # renovate: registryUrl=https://bjw-s.github.io/helm-charts/
       chart: app-template
-      version: 1.5.1
+      version: 2.0.2
       sourceRef:
         kind: HelmRepository
         name: bjw-s-charts
         namespace: flux-system
       interval: 5m
-
-  # dependsOn:
-  #   - name: pod-gateway
-  #     namespace: vpn
 
   install:
     remediation:
@@ -29,20 +25,38 @@ spec:
       retries: 5
 
   values:
+    controllers:
+      main:
+        type: statefulset
 
-    image:
-      repository: ghcr.io/onedr0p/bazarr
-      tag: 1.3.0@sha256:bb3a0b5ab5588963dde95f11cd59a06cf3d13d574d7927bf9ec26460695c238b
+        annotations:
+          reloader.stakater.com/auto: "true"
 
-    env:
-      TZ: "America/New_York"
+        statefulset:
+          volumeClaimTemplates:
+            - name: config
+              accessMode: ReadWriteOnce
+              size: 20Gi
+              storageClass: longhorn-config
+              globalMounts:
+                - path: /config
+        pod:
+          securityContext:
+            runAsUser: 568
+            runAsGroup: 568
+            fsGroup: 568
+            fsGroupChangePolicy: OnRootMismatch
+            supplementalGroups:
+              - 65539
 
-    podSecurityContext:
-      runAsUser: 568
-      runAsGroup: 568
-      fsGroup: 568
-      fsGroupChangePolicy: OnRootMismatch
-      supplementalGroups: [44, 109, 10000]
+        containers:
+          main:
+            image:
+              repository: ghcr.io/onedr0p/bazarr
+              tag: 1.3.0@sha256:bb3a0b5ab5588963dde95f11cd59a06cf3d13d574d7927bf9ec26460695c238b
+
+            env:
+              TZ: "America/New_York"
 
     ingress:
       main:
@@ -52,7 +66,9 @@ spec:
           - host: &host "bazarr.${INTERNAL_DOMAIN}"
             paths:
               - path: /
-                pathType: Prefix
+                service:
+                  name: main
+                  port: http
         tls:
           - hosts:
               - *host
@@ -65,51 +81,37 @@ spec:
             port: 6767
 
     persistence:
-      config:
-        enabled: true
-        existingClaim: bazarr-config
-
       media:
-        enabled: true
-        type: custom
-        volumeSpec:
-          nfs:
-            server: "${NAS1_ADDR}"
-            path: /volume1/Media
-        mountPath: /media
+        type: nfs
+        server: "${NAS1_ADDR}"
+        path: /volume1/Media
+        globalMounts:
+          - path: /media
 
       media2:
-        enabled: true
-        type: custom
-        volumeSpec:
-          nfs:
-            server: "${NAS2_ADDR}"
-            path: /volume1/Media2
-        mountPath: /media2
+        type: nfs
+        server: "${NAS2_ADDR}"
+        path: /volume1/Media2
+        globalMounts:
+          - path: /media2
+
+      media3:
+        type: nfs
+        server: "${NAS3_ADDR}"
+        path: /volume1/Plex
+        globalMounts:
+          - path: /media3
 
       temp:
-        enabled: true
-        type: custom
-        volumeSpec:
-          nfs:
-            server: "${NAS2_ADDR}"
-            path: /volume1/temp
-        mountPath: /temp_dir
+        type: nfs
+        server: "${NAS2_ADDR}"
+        path: /volume1/temp
+        globalMounts:
+          - path: /temp_dir
 
       backup:
-        enabled: true
-        readOnly: false
-        type: custom
-        volumeSpec:
-          nfs:
-            server: "${NAS2_ADDR}"
-            path: /volume1/Kubernetes/bazarr
-        mountPath: /config/backup
-
-    resources:
-      requests:
-        memory: 900M
-        cpu: 1200m
-      limits:
-        memory: 8G
-        cpu: 15000m
+        type: nfs
+        server: "${NAS2_ADDR}"
+        path: /volume1/Kubernetes/bazarr
+        globalMounts:
+          - path: /config/backup
