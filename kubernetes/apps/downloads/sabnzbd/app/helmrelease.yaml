@@ -87,7 +87,8 @@ spec:
       downloads:
         enabled: true
         existingClaim: sabnzbd-downloads-v1
-        mountPath: /downloads
+        globalMounts:
+          - path: /downloads
 
       temp:
         type: nfs
