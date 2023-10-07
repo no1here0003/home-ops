@@ -67,7 +67,7 @@ spec:
           main:
             image:
               repository: ghcr.io/onedr0p/plex-beta
-              tag: 1.32.7.7571-13cdc68dc@sha256:274c8a7700cd2a050e5b9dee07b7faef85078de4da3b4ff2db22e328b2e8a6d1
+              tag: 1.32.7.7571-13cdc68dc@sha256:86549df3237646dc6aa7194d5d739b30173239a0fc53fac0addb9cdd8de99f1e
             env:
               TZ: "America/New_York"
               ADVERTISE_IP: "http://${PLEX_LB}:32410/"
