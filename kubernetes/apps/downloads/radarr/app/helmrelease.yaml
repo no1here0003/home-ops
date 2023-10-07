@@ -10,16 +10,12 @@ spec:
     spec:
       # renovate: registryUrl=https://bjw-s.github.io/helm-charts/
       chart: app-template
-      version: 1.5.1
+      version: 2.0.2
       sourceRef:
         kind: HelmRepository
         name: bjw-s-charts
         namespace: flux-system
-      interval: 5m
-
-  # dependsOn:
-  #   - name: pod-gateway
-  #     namespace: vpn
+      interval: 30m
 
   install:
     remediation:
@@ -29,89 +25,80 @@ spec:
       retries: 5
   values:
 
-    podSecurityContext:
-      runAsUser: 568
-      runAsGroup: 568
-      fsGroup: 568
-      fsGroupChangePolicy: OnRootMismatch
-      supplementalGroups: [44, 109, 10000]
-
-    image:
-      repository: ghcr.io/onedr0p/radarr
-      tag: 4.7.5.7809
-
-    env:
-      TZ: "America/New_York"
-
-    ingress:
+    controllers:
       main:
-        enabled: true
-        ingressClassName: "nginx"
-        hosts:
-          - host: &host "radarr.${INTERNAL_DOMAIN}"
-            paths:
-              - path: /
-                pathType: Prefix
-        tls:
-          - hosts:
-              - *host
-          - secretName: radarr-tls
+        type: statefulset
+
+        annotations:
+          reloader.stakater.com/auto: "true"
+
+        statefulset:
+          volumeClaimTemplates:
+            - name: config
+              accessMode: ReadWriteOnce
+              size: 100Gi
+              storageClass: longhorn-config
+              globalMounts:
+                - path: /config
+        pod:
+          securityContext:
+            runAsUser: 568
+            runAsGroup: 568
+            fsGroup: 568
+            fsGroupChangePolicy: OnRootMismatch
+            supplementalGroups:
+              - 65539
+
+        containers:
+          main:
+            image:
+              repository: ghcr.io/onedr0p/radarr-develop
+              tag: 5.0.3.8107@sha256:2c4fca668420dfa87b286da9b0a43f6dc64fd26329f9e914bc2de58887091eaf
+
+            env:
+              TZ: "America/New_York"
+              RADARR__PORT: &port 7878
 
     service:
       main:
         ports:
           http:
-            port: 7878
+            port: *port
+
+    ingress:
+      main:
+        enabled: true
+        className: "nginx"
+        hosts:
+          - host: &host "radarr.${INTERNAL_DOMAIN}"
+            paths:
+              - path: /
+                service:
+                  name: main
+                  port: http
+        tls:
+          - hosts:
+              - *host
+          - secretName: radarr-tls
 
     persistence:
-      config:
-        enabled: true
-        existingClaim: radarr-config
       media:
-        enabled: true
-        type: custom
-        volumeSpec:
-          nfs:
-            server: "${NAS1_ADDR}"
-            path: /volume1/Media
-        mountPath: /media
+        type: nfs
+        server: "${NAS1_ADDR}"
+        path: /volume1/Media
+        globalMounts:
+          - path: /media
+
       backups:
-        enabled: true
-        type: custom
-        volumeSpec:
-          nfs:
-            server: "${NAS2_ADDR}"
-            path: /volume1/Kubernetes/radarr
-        mountPath: /config/Backups
+        type: nfs
+        server: "${NAS2_ADDR}"
+        path: /volume1/Kubernetes/radarr
+        globalMounts:
+          - path: /config/Backups
+
       temp:
-        enabled: true
-        type: custom
-        volumeSpec:
-          nfs:
-            server: "${NAS1_ADDR}"
-            path: /volume1/temp
-        mountPath: /temp_dir
-
-    resources:
-      requests:
-        memory: 2618M
-        cpu: 10m
-      limits:
-        memory: 8G
-        cpu: 6000m
-
-    metrics:
-      enabled: true
-      serviceMonitor:
-        interval: 3m
-        scrapeTimeout: 1m
-      prometheusRule:
-        enabled: true
-      # exporter:
-      #   image:
-      #     repository: ghcr.io/onedr0p/exportarr
-      #     tag: v1.3.0
-      #   env:
-      #     port: 9794
-      #     additionalMetrics: true
-      #     unknownQueueItems: true
+        type: nfs
+        server: "${NAS1_ADDR}"
+        path: /volume1/temp
+        globalMounts:
+          - path: /temp_dir

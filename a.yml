@@ -3,9 +3,9 @@ kind: PersistentVolumeClaim
 metadata:
   labels:
     app.kubernetes.io/component: main
-    app.kubernetes.io/instance: sonarr
-    app.kubernetes.io/name: sonarr
-  name: config-sonarr-0
+    app.kubernetes.io/instance: radarr
+    app.kubernetes.io/name: radarr
+  name: config-radarr-0
   namespace: downloads
 spec:
   accessModes:
