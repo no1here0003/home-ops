@@ -124,6 +124,7 @@ spec:
         path: /volume1/Media
         globalMounts:
           - path: /media
+            readOnly: true
 
       media2:
         type: nfs
@@ -131,6 +132,7 @@ spec:
         path: /volume1/Media2
         globalMounts:
           - path: /media2
+            readOnly: true
 
       media3:
         type: nfs
@@ -138,6 +140,7 @@ spec:
         path: /volume1/Plex
         globalMounts:
           - path: /media3
+            readOnly: true
 
       backups:
         type: nfs
