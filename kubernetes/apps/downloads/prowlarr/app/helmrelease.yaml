@@ -10,7 +10,7 @@ spec:
     spec:
       # renovate: registryUrl=https://bjw-s.github.io/helm-charts/
       chart: app-template
-      version: 1.5.1
+      version: 2.0.2
       sourceRef:
         kind: HelmRepository
         name: bjw-s-charts
@@ -30,60 +30,67 @@ spec:
       retries: 5
 
   values:
+    controllers:
+      main:
+        type: statefulset
 
-    image:
-      repository: ghcr.io/onedr0p/prowlarr-nightly
-      tag: 1.9.3.4011
+        annotations:
+          reloader.stakater.com/auto: "true"
 
-    env:
-      TZ: "America/New_York"
-      PROWLARR__AUTHENTICATION_METHOD: External
+        statefulset:
+          volumeClaimTemplates:
+            - name: config
+              accessMode: ReadWriteOnce
+              size: 1Gi
+              storageClass: longhorn-config
+              globalMounts:
+                - path: /config
+
+        pod:
+          securityContext:
+            runAsUser: 568
+            runAsGroup: 568
+            fsGroup: 568
+            fsGroupChangePolicy: OnRootMismatch
+            supplementalGroups:
+              - 65539
+
+        containers:
+          main:
+            image:
+              repository: ghcr.io/onedr0p/prowlarr-nightly
+              tag: 1.9.3.4011
+
+            env:
+              TZ: "America/New_York"
+              PROWLARR__AUTHENTICATION_METHOD: External
+              PROWLARR__PORT: &port 9696
+
     service:
       main:
         ports:
           http:
-            port: 9696
+            port: *port
 
     ingress:
       main:
         enabled: true
-        ingressClassName: "nginx"
+        className: "nginx"
         hosts:
-          - host: "prowlarr.${INTERNAL_DOMAIN}"
+          - host: &host "prowlarr.${INTERNAL_DOMAIN}"
             paths:
               - path: /
                 pathType: Prefix
         tls:
           - hosts:
-              - "prowlarr.${INTERNAL_DOMAIN}"
+              - *host
           - secretName: prowlarr-tls
 
-    podSecurityContext:
-      runAsUser: 568
-      runAsGroup: 568
-      fsGroup: 568
-      fsGroupChangePolicy: OnRootMismatch
-      supplementalGroups: [44, 109, 10000]
-
     persistence:
-      config:
-        enabled: true
-        existingClaim: prowlarr-config
 
       backup:
-        enabled: true
-        readOnly: false
-        type: custom
-        volumeSpec:
-          nfs:
-            server: "${NAS2_ADDR}"
-            path: /volume1/Kubernetes/prowlarr
-        mountPath: /config/Backups
-
-    resources:
-      requests:
-        memory: 266M
-        cpu: 10m
-      limits:
-        memory: 3429M
-        cpu: 150m
+        type: nfs
+        server: "${NAS2_ADDR}"
+        path: /volume1/Kubernetes/prowlarr
+        globalMounts:
+          - path: /config/Backups
