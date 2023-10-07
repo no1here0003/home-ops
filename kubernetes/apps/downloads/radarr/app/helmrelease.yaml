@@ -58,6 +58,7 @@ spec:
             env:
               TZ: "America/New_York"
               RADARR__PORT: &port 7878
+              RADARR__AUTHENTICATION_METHOD: External
 
     service:
       main:
