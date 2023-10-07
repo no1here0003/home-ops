@@ -111,4 +111,4 @@ spec:
         globalMounts:
           - path: /etc/cloudflared/creds/credentials.json
             subPath: credentials.json
-        readOnly: true
+            readOnly: true
