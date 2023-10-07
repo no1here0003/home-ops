@@ -60,7 +60,6 @@ spec:
             image:
               repository: ghcr.io/onedr0p/prowlarr-nightly
               tag: 1.9.3.4011
-
             env:
               TZ: "America/New_York"
               PROWLARR__AUTHENTICATION_METHOD: External
@@ -89,7 +88,6 @@ spec:
           - secretName: prowlarr-tls
 
     persistence:
-
       backup:
         type: nfs
         server: "${NAS2_ADDR}"
