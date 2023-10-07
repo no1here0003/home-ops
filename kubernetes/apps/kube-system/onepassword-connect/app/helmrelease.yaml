@@ -54,12 +54,14 @@ spec:
                   secretKeyRef:
                     name: onepassword-connect-secret
                     key: 1password-credentials.json
+
             resources:
               requests:
                 cpu: 5m
                 memory: 10Mi
               limits:
                 memory: 100Mi
+
             probes:
               liveness:
                 enabled: true
