@@ -5,4 +5,4 @@ resources:
   - ./namespace.yaml
   - ./authentik/ks.yaml
   - ./trivy/ks.yaml
-  - ./falco/ks.yaml
+  # - ./falco/ks.yaml
