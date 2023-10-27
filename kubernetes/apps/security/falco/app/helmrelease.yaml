@@ -28,7 +28,7 @@ spec:
       pullPolicy: IfNotPresent
       registry: docker.io
       repository: falcosecurity/falco-no-driver
-      tag: "0.36.1"
+      tag: "0.36.2"
 
     serviceAccount:
       # -- Specifies whether a service account should be created.
