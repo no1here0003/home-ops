@@ -101,7 +101,7 @@ spec:
       media3:
         type: nfs
         server: "${NAS3_ADDR}"
-        path: /volume1/Plex
+        path: /volume1/Media
         globalMounts:
           - path: /media3
 
