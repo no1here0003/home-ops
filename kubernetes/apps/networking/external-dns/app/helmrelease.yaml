@@ -2,48 +2,54 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: &app external-dns
+  name: external-dns
   namespace: networking
 spec:
-  interval: 30m
+  interval: 5m
   chart:
     spec:
+      # renovate: registryUrl=https://kubernetes-sigs.github.io/external-dns
       chart: external-dns
       version: 1.13.1
       sourceRef:
         kind: HelmRepository
         name: external-dns
         namespace: flux-system
-  maxHistory: 2
-  install:
-    remediation:
-      retries: 3
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      retries: 3
-  uninstall:
-    keepHistory: false
+      interval: 5m
   values:
-    fullnameOverride: *app
+    interval: 5m
+    logLevel: debug
+
     provider: cloudflare
     env:
+      - name: CF_API_EMAIL
+        valueFrom:
+          secretKeyRef:
+            name: external-dns
+            key: email
       - name: CF_API_TOKEN
         valueFrom:
           secretKeyRef:
-            name: external-dns-secret
-            key: api-token
+            name: external-dns
+            key: token
     extraArgs:
-      - --ingress-class=external
       - --cloudflare-proxied
+      - --annotation-filter=external-dns/is-public in (true)
+      - --aws-prefer-cname
       - --crd-source-apiversion=externaldns.k8s.io/v1alpha1
       - --crd-source-kind=DNSEndpoint
     policy: sync
-    sources: ["crd", "ingress"]
-    txtPrefix: k8s.
-    txtOwnerId: default
-    domainFilters: ["${SECRET_DOMAIN}"]
-    serviceMonitor:
-      enabled: true
-    podAnnotations:
-      secret.reloader.stakater.com/reload: external-dns-secret
+    sources:
+      - ingress
+      - service
+      - crd
+    txtPrefix: "k8s."
+    txtOwnerId: "default"
+    domainFilters:
+      - "${SECRET_DOMAIN}"
+      - "${SECRET_DOMAIN2}"
+      - "${SECRET_DOMAIN3}"
+    resources:
+      requests:
+        memory: 105M
+        cpu: 15m
