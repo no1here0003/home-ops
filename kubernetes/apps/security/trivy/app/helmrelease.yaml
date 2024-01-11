@@ -38,7 +38,7 @@ spec:
       image:
         registry: ghcr.io
         repository: aquasecurity/trivy
-        tag: 0.48.2
+        tag: 0.48.3
 
       storageClassName: longhorn-config
 
