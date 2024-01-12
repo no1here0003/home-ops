@@ -141,7 +141,7 @@ spec:
         pullPolicy: IfNotPresent
         registry: docker.io
         repository: falcosecurity/falcoctl
-        tag: "0.6.2@sha256:2ce865adad83d1b7d100b686a703c15ac8302a276079344a2c96f553ae5d49dc"
+        tag: "0.7.0@sha256:b20371b8ba6c6d9fc628ea93d3fb7b96b8f59779c45f35f680c4ce433fab3b32"
 
       artifact:
         # -- Runs "falcoctl artifact install" command as an init container. It is used to install artfacts before
