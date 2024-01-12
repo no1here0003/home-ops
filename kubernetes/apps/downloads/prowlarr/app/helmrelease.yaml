@@ -59,7 +59,7 @@ spec:
           main:
             image:
               repository: ghcr.io/onedr0p/prowlarr-nightly
-              tag: 1.12.1.4196
+              tag: 1.12.1.4200
             env:
               TZ: "America/New_York"
               PROWLARR__AUTHENTICATION_METHOD: External
