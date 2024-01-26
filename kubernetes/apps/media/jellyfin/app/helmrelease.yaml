@@ -4,7 +4,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: &app jellyfin
-  namespace: default
+  namespace: media
 spec:
   interval: 30m
   chart:
@@ -151,5 +151,3 @@ spec:
         type: emptyDir
         globalMounts:
           - path: /cache
-
-
