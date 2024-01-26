@@ -95,7 +95,8 @@ spec:
         className: "nginx"
         annotations:
           hajimari.io/icon: simple-icons:jellyfin
-          nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+          external-dns/is-public: "true"
+          cert-manager.io/cluster-issuer: letsencrypt-production
         hosts:
           - host: &host "jellyfin.${SECRET_DOMAIN2}"
             paths:
