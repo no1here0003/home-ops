@@ -1,121 +1,113 @@
 ---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2beta2.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: plex
-  namespace: media
+  name: &app jellyfin
+  namespace: default
 spec:
-  interval: 5m
+  interval: 30m
   chart:
     spec:
-      # renovate: registryUrl=https://bjw-s.github.io/helm-charts/
       chart: app-template
       version: 2.5.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s-charts
         namespace: flux-system
-      interval: 5m
-
+  maxHistory: 2
   install:
     createNamespace: true
     remediation:
-      retries: 5
+      retries: 3
   upgrade:
+    cleanupOnFail: true
     remediation:
-      retries: 5
-
+      retries: 3
+  uninstall:
+    keepHistory: false
   dependsOn:
     - name: intel-device-plugin-gpu
       namespace: kube-system
     - name: longhorn
       namespace: storage
-
   values:
+    defaultPodOptions:
+      enableServiceLinks: false
+      nodeSelector:
+        intel.feature.node.kubernetes.io/gpu: "true"
+      securityContext:
+        runAsUser: 568
+        runAsGroup: 568
+        fsGroup: 568
+        fsGroupChangePolicy: OnRootMismatch
     controllers:
       main:
         type: statefulset
         annotations:
           reloader.stakater.com/auto: "true"
-
-        statefulset:
-          volumeClaimTemplates:
-            - name: config
-              accessMode: ReadWriteOnce
-              size: 20Gi
-              storageClass: longhorn-plex
-              globalMounts:
-                - path: /config
-
-        pod:
-          enableServiceLinks: false
-          nodeSelector:
-            intel.feature.node.kubernetes.io/gpu: "true"
-          securityContext:
-            runAsUser: 568
-            runAsGroup: 568
-            fsGroup: 568
-            fsGroupChangePolicy: "OnRootMismatch"
-            supplementalGroups:
-              - 44
-              - 105
-              - 100
-              - 106
-              - 65539
-
         containers:
           main:
             image:
-              repository: ghcr.io/onedr0p/plex-beta
-              tag: 1.40.0.7775-456fbaf97@sha256:cd6bafd8cf9f75c2d5b6517de312a82a986049f89f089da74b6bdb23928b8b37
+              repository: ghcr.io/onedr0p/jellyfin
+              tag: 10.8.11@sha256:926e2a9f6677a0c7b12feba29f36c954154869318d6a52df72f72ff9c74cf494
             env:
-              TZ: "America/New_York"
-              ADVERTISE_IP: "http://${PLEX_LB}:32410/"
-              HOSTNAME: "plex-cluster"
-              PLEX_CLAIM: ${PLEX_CLAIM}
+              DOTNET_SYSTEM_IO_DISABLEFILELOCKING: "true"
+              JELLYFIN_FFmpeg__probesize: 50000000
+              JELLYFIN_FFmpeg__analyzeduration: 50000000
+              JELLYFIN_PublishedServerUrl: https://jellyfin.${SECRET_DOMAIN2}
+              TZ: ${TIMEZONE}
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: &port 8096
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+              startup:
+                enabled: false
             resources:
               requests:
                 gpu.intel.com/i915: 1
-                cpu: 1000m
-                memory: 16G
+                cpu: 100m
+                memory: 8Gi
               limits:
                 gpu.intel.com/i915: 1
-                memory: 64G
-
+                memory: 32Gi
     service:
       main:
-        enabled: true
         type: LoadBalancer
         annotations:
-          io.cilium/lb-ipam-ips: ${PLEX_LB}
-          metallb.universe.tf/allow-shared-ip: plex
+          io.cilium/lb-ipam-ips: ${SVC_JELLYFIN_ADDR}
+        loadBalancerIP: *loadBalancerIP
         externalTrafficPolicy: Cluster
         ports:
           http:
-            port: 32410
-            targetPort: 32400
-            protocol: TCP
-
+            port: 8096
     ingress:
       main:
         enabled: true
         className: "nginx"
         annotations:
-          external-dns.alpha.kubernetes.io/target: "${SECRET_DOMAIN}"
-          external-dns/is-public: "true"
-          cert-manager.io/cluster-issuer: letsencrypt-production
+          hajimari.io/icon: simple-icons:jellyfin
           nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
         hosts:
-          - host: &host "plex.${SECRET_DOMAIN}"
+          - host: &host "https://jellyfin.${SECRET_DOMAIN2}"
             paths:
               - path: /
                 service:
                   name: main
-                  port: http
+                  port: https
         tls:
           - hosts:
               - *host
-          - secretName: plex-tls-secret
+          - secretName: jellyfin-tls-secret
 
     persistence:
       media:
@@ -145,7 +137,7 @@ spec:
       backups:
         type: nfs
         server: "${NAS2_ADDR}"
-        path: /volume1/Kubernetes/plex
+        path: /volume1/Kubernetes/jellyfin
         globalMounts:
           - path: /backups
 
@@ -154,7 +146,10 @@ spec:
         globalMounts:
           - path: /transcode
 
-      plex-cache:
-        existingClaim: plex-cache
+      cache:
+        enabled: true
+        type: emptyDir
         globalMounts:
-          - path: /config/Library/Application Support/Plex Media Server/Cache
+          - path: /cache
+
+

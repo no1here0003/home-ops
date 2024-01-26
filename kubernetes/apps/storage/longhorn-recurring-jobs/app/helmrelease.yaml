@@ -56,6 +56,13 @@ spec:
         backup:
           - interval: 24h
             retain: 2
+      "Jellyfin":
+        snapshot:
+          - interval: 10m
+            retain: 6
+        backup:
+          - interval: 24h
+            retain: 2
       "Config":
         snapshot:
           - interval: 10m
