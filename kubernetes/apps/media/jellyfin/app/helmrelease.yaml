@@ -97,7 +97,7 @@ spec:
           hajimari.io/icon: simple-icons:jellyfin
           nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
         hosts:
-          - host: &host "https://jellyfin.${SECRET_DOMAIN2}"
+          - host: &host "jellyfin.${SECRET_DOMAIN2}"
             paths:
               - path: /
                 service:
