@@ -102,7 +102,7 @@ spec:
               - path: /
                 service:
                   name: main
-                  port: https
+                  port: http
         tls:
           - hosts:
               - *host
