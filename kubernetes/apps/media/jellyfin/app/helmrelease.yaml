@@ -46,6 +46,14 @@ spec:
         type: statefulset
         annotations:
           reloader.stakater.com/auto: "true"
+        statefulset:
+          volumeClaimTemplates:
+            - name: config
+              accessMode: ReadWriteOnce
+              size: 20Gi
+              storageClass: longhorn-plex
+              globalMounts:
+                - path: /config
         containers:
           main:
             image:
@@ -79,7 +87,7 @@ spec:
                 memory: 8Gi
               limits:
                 gpu.intel.com/i915: 1
-                memory: 32Gi
+                memory: 64Gi
     service:
       main:
         type: LoadBalancer
