@@ -95,6 +95,7 @@ spec:
         className: "nginx"
         annotations:
           hajimari.io/icon: simple-icons:jellyfin
+          external-dns.alpha.kubernetes.io/target: ${SECRET_DOMAIN2}
           external-dns/is-public: "true"
           cert-manager.io/cluster-issuer: letsencrypt-production
         hosts:
