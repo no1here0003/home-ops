@@ -32,15 +32,7 @@ spec:
     - name: longhorn
       namespace: storage
   values:
-    defaultPodOptions:
-      enableServiceLinks: false
-      nodeSelector:
-        intel.feature.node.kubernetes.io/gpu: "true"
-      securityContext:
-        runAsUser: 568
-        runAsGroup: 568
-        fsGroup: 568
-        fsGroupChangePolicy: OnRootMismatch
+
     controllers:
       main:
         type: statefulset
@@ -54,6 +46,21 @@ spec:
               storageClass: longhorn-plex
               globalMounts:
                 - path: /config
+        pod:
+          enableServiceLinks: false
+          nodeSelector:
+            intel.feature.node.kubernetes.io/gpu: "true"
+          securityContext:
+            runAsUser: 568
+            runAsGroup: 568
+            fsGroup: 568
+            fsGroupChangePolicy: "OnRootMismatch"
+            supplementalGroups:
+              - 44
+              - 105
+              - 100
+              - 106
+              - 65539
         containers:
           main:
             image:
