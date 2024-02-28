@@ -58,6 +58,7 @@ spec:
             supplementalGroups:
               - 44
               - 105
+              - 109
               - 100
               - 106
               - 65539
