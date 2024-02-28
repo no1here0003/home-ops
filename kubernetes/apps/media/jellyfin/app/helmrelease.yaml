@@ -66,7 +66,7 @@ spec:
           main:
             image:
               repository: jellyfin/jellyfin
-              tag: 10.8.11@sha256:926e2a9f6677a0c7b12feba29f36c954154869318d6a52df72f72ff9c74cf494
+              tag: 10.8.13-1
             env:
               DOTNET_SYSTEM_IO_DISABLEFILELOCKING: "true"
               JELLYFIN_FFmpeg__probesize: 500M
@@ -127,6 +127,7 @@ spec:
           - secretName: jellyfin-tls-secret
 
     persistence:
+      enabled: true
       media:
         type: nfs
         server: "${NAS1_ADDR}"
@@ -136,6 +137,7 @@ spec:
             readOnly: true
 
       media2:
+        enabled: true
         type: nfs
         server: "${NAS2_ADDR}"
         path: /volume1/Media2
@@ -144,6 +146,7 @@ spec:
             readOnly: true
 
       media3:
+        enabled: true
         type: nfs
         server: "${NAS3_ADDR}"
         path: /volume1/Media
@@ -152,6 +155,7 @@ spec:
             readOnly: true
 
       backups:
+        enabled: true
         type: nfs
         server: "${NAS2_ADDR}"
         path: /volume1/Kubernetes/jellyfin
@@ -159,6 +163,7 @@ spec:
           - path: /backups
 
       transcode:
+        enabled: true
         type: emptyDir
         globalMounts:
           - path: /transcode
