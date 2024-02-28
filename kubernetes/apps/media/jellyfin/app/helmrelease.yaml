@@ -65,8 +65,8 @@ spec:
         containers:
           main:
             image:
-              repository: jellyfin/jellyfin
-              tag: 10.8.13-1
+              repository: lscr.io/linuxserver/jellyfin
+              tag: 10.8.13
             env:
               DOTNET_SYSTEM_IO_DISABLEFILELOCKING: "true"
               JELLYFIN_FFmpeg__probesize: 500M
