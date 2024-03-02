@@ -136,7 +136,6 @@ spec:
             readOnly: true
 
       media2:
-        enabled: true
         type: nfs
         server: "${NAS2_ADDR}"
         path: /volume1/Media2
@@ -145,7 +144,6 @@ spec:
             readOnly: true
 
       media3:
-        enabled: true
         type: nfs
         server: "${NAS3_ADDR}"
         path: /volume1/Media
@@ -154,7 +152,6 @@ spec:
             readOnly: true
 
       backups:
-        enabled: true
         type: nfs
         server: "${NAS2_ADDR}"
         path: /volume1/Kubernetes/jellyfin
@@ -162,7 +159,6 @@ spec:
           - path: /backups
 
       transcode:
-        enabled: true
         type: emptyDir
         globalMounts:
           - path: /transcode
