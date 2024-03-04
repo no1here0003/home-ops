@@ -75,12 +75,10 @@ spec:
 
     postgresql:
       enabled: true
-      persistence:
-        enabled: true
-
-      postgresqlUsername: authentik
-      postgresqlDatabase: authentik
-      postgresqlPassword: ${SECRET_AUTHENTIK_POSTGRES_PASSWORD}
+      auth:
+        username: authentik
+        database: authentik
+        password: ${SECRET_AUTHENTIK_POSTGRES_PASSWORD}
 
     redis:
       enabled: true
