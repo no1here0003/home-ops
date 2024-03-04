@@ -5,8 +5,12 @@ metadata:
   name: cluster-apps-system-upgrade-controller
   namespace: flux-system
 spec:
+  targetNamespace: system-upgrade
   dependsOn:
     - name: cilium
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
   path: ./kubernetes/apps/system-upgrade/system-upgrade-controller/app
   prune: true
   sourceRef:
@@ -23,8 +27,12 @@ metadata:
   name: cluster-apps-system-upgrade-controller-plans
   namespace: flux-system
 spec:
+  targetNamespace: system-upgrade
   dependsOn:
     - name: cluster-apps-system-upgrade-controller
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
   path: ./kubernetes/apps/system-upgrade/system-upgrade-controller/plans
   prune: true
   sourceRef:
