@@ -126,7 +126,6 @@ spec:
           - secretName: jellyfin-tls-secret
 
     persistence:
-      enabled: true
       media:
         type: nfs
         server: "${NAS1_ADDR}"
