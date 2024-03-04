@@ -79,6 +79,8 @@ spec:
         username: authentik
         database: authentik
         password: ${SECRET_AUTHENTIK_POSTGRES_PASSWORD}
+      primary:
+        persistence: true
 
     redis:
       enabled: true
