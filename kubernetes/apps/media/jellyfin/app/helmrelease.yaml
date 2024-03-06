@@ -59,8 +59,6 @@ spec:
               tag: 10.8.13-1
             env:
               DOTNET_SYSTEM_IO_DISABLEFILELOCKING: "true"
-              JELLYFIN_FFmpeg__probesize: 500M
-              JELLYFIN_FFmpeg__analyzeduration: 500M
               JELLYFIN_PublishedServerUrl: &loadBalancerIP ${SVC_JELLYFIN_ADDR}
               TZ: ${TIMEZONE}
             probes:
