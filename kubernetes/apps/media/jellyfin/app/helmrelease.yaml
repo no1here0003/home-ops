@@ -47,10 +47,12 @@ spec:
             fsGroupChangePolicy: "OnRootMismatch"
             supplementalGroups:
               - 44
-              - 105
-              - 109
               - 100
+              - 104
+              - 105
               - 106
+              - 109
+              - 1000
               - 65539
         containers:
           main:
@@ -153,7 +155,9 @@ spec:
           - path: /backups
 
       transcode:
+        enabled: true
         type: emptyDir
+        medium: Memory
         globalMounts:
           - path: /transcode
 
