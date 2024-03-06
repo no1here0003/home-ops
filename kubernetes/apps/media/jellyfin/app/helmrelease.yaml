@@ -34,17 +34,8 @@ spec:
   values:
     controllers:
       main:
-        type: statefulset
         annotations:
           reloader.stakater.com/auto: "true"
-        statefulset:
-          volumeClaimTemplates:
-            - name: config
-              accessMode: ReadWriteOnce
-              size: 20Gi
-              storageClass: longhorn-plex
-              globalMounts:
-                - path: /config
         pod:
           enableServiceLinks: false
           nodeSelector:
@@ -126,6 +117,10 @@ spec:
           - secretName: jellyfin-tls-secret
 
     persistence:
+      config:
+        enabled: true
+        existingClaim: jellyfin
+
       media:
         type: nfs
         server: "${NAS1_ADDR}"
