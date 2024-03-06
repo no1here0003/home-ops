@@ -161,8 +161,3 @@ spec:
         globalMounts:
           - path: /transcode
 
-      cache:
-        enabled: true
-        type: emptyDir
-        globalMounts:
-          - path: /cache
