@@ -118,4 +118,3 @@ spec:
         path: /volume1/Kubernetes/sonarr
         globalMounts:
           - path: /config/Backups
-

@@ -31,10 +31,10 @@ weave_gitops:
 csi_driver_nfs:
   enabled: false
   storage_class:
-    # - name:   # name of the storage class (must match [a-z0-9-]+)
-    #   server: # dns name or ip address of nfs server
-    #   share:  # exported share (path)
-    # ...
+  # - name:   # name of the storage class (must match [a-z0-9-]+)
+  #   server: # dns name or ip address of nfs server
+  #   share:  # exported share (path)
+  # ...
 
 # https://github.com/rancher/system-upgrade-controller
 system_upgrade_controller:

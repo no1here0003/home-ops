@@ -77,4 +77,3 @@ spec:
           - hosts:
               - "tautulli.${INTERNAL_DOMAIN}"
           - secretName: tautulli-tls
-
