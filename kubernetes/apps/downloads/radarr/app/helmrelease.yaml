@@ -27,19 +27,9 @@ spec:
 
     controllers:
       main:
-        type: statefulset
-
         annotations:
           reloader.stakater.com/auto: "true"
 
-        statefulset:
-          volumeClaimTemplates:
-            - name: config
-              accessMode: ReadWriteOnce
-              size: 100Gi
-              storageClass: longhorn-config
-              globalMounts:
-                - path: /config
         pod:
           securityContext:
             runAsUser: 568
@@ -83,6 +73,11 @@ spec:
           - secretName: radarr-tls
 
     persistence:
+
+      config:
+        enabled: true
+        existingClaim: radarr
+
       media:
         type: nfs
         server: "${NAS1_ADDR}"
