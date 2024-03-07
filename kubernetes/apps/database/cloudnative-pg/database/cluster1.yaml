@@ -9,8 +9,8 @@ spec:
   imageName: ghcr.io/cloudnative-pg/postgresql:16.2-6
   primaryUpdateStrategy: unsupervised
   storage:
-    size: 20Gi
-    storageClass: longhorn-database
+    size: 50Gi
+    storageClass: local-path
   superuserSecret:
     name: cloudnative-pg-secret
   enableSuperuserAccess: true
