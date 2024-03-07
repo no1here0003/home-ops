@@ -28,7 +28,7 @@ spec:
     persistence:
       downloads:
         enabled: true
-        existingClaim: radarr-config
+        existingClaim: radarr
         mountPath: /radarr/config
     resources:
       requests:
