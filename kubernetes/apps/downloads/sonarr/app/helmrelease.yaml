@@ -84,6 +84,10 @@ spec:
 
     persistence:
 
+      config:
+        enabled: true
+        existingClaim: sonarr
+
       media:
         type: nfs
         server: "${NAS1_ADDR}"
