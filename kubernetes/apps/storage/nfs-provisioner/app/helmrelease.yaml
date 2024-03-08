@@ -30,6 +30,13 @@ spec:
     storageClass:
       provisionerName: nfs-provisioner
       create: false
+    podSecurityContext:
+      runAsUser: 568
+      runAsGroup: 568
+      fsGroup: 568
+      fsGroupChangePolicy: OnRootMismatch
+      supplementalGroups:
+        - 65539
   valuesFrom:
     - kind: Secret
       name: &secret nfs-secret
