@@ -65,12 +65,10 @@ spec:
         limits:
           memory: 1200Mi
 
-    geoip:
-      enabled: false
-
     authentik:
       email:
         use_ssl: true
+        port: "465"
       log_level: debug
       error_reporting:
         enabled: false
@@ -126,10 +124,6 @@ spec:
       name: *secret
       valuesKey: SMTP_PASS
       targetPath: authentik.email.password
-    - kind: Secret
-      name: *secret
-      valuesKey: SMTP_PORT
-      targetPath: authentik.email.port
     - kind: Secret
       name: *secret
       valuesKey: SMTP_FROM
