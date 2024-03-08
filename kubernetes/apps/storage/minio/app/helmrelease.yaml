@@ -139,11 +139,11 @@ spec:
           - hosts:
               - *s3Host
     persistence:
-      blah:
+      data:
         enabled: true
         type: nfs
         globalMounts:
-          - path: /blah
+          - path: /data
 
   valuesFrom:
     - kind: Secret
