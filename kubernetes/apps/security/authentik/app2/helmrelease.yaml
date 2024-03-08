@@ -65,6 +65,9 @@ spec:
         limits:
           memory: 1200Mi
 
+    geoip:
+      enabled: false
+
     authentik:
       email:
         use_ssl: true
