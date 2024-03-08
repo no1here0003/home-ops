@@ -52,10 +52,7 @@ spec:
             paths:
               - /
 
-        tls:
-          - secretName: tls.authentik2
-            hosts:
-              - *host
+        tls: [hosts: [*host]]
 
     worker:
       replicas: 1
