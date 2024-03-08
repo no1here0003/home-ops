@@ -27,15 +27,12 @@ spec:
     image:
       repository: registry.k8s.io/sig-storage/nfs-subdir-external-provisioner
       tag: v4.0.2
-    nfs:
-      server: ${CONFIG_NFS_SERVER_IP_ADDRESS}
-      path: ${CONFIG_NFS_SERVER_PATH}
     storageClass:
       provisionerName: nfs-provisioner
       create: false
   valuesFrom:
     - kind: Secret
-      name: *secret
+      name: &secret nfs-secret
       valuesKey: NAS3_ADDR
       targetPath: nfs.server
     - kind: Secret
