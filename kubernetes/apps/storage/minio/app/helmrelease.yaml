@@ -146,7 +146,7 @@ spec:
           - hosts:
               - *s3Host
     persistence:
-      data:
+      config:
         enabled: true
         type: nfs
         globalMounts:
@@ -156,8 +156,8 @@ spec:
     - kind: Secret
       name: *secret
       valuesKey: NAS3_ADDR
-      targetPath: persistence.data.server
+      targetPath: persistence.config.server
     - kind: Secret
       name: *secret
       valuesKey: MINIO_NFS_PATH
-      targetPath: persistence.data.path
+      targetPath: persistence.config.path
