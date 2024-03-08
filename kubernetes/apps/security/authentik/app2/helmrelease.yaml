@@ -129,7 +129,7 @@ spec:
       targetPath: authentik.email.port
     - kind: Secret
       name: *secret
-      valuesKey: AUTHENTIK_SMTP_FROM
+      valuesKey: SMTP_FROM
       targetPath: authentik.email.from
     - kind: Secret
       name: *secret
