@@ -3,7 +3,7 @@
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: &proviioner nfs-provisioner
+  name: &provisioner nfs-provisioner
   labels:
     app.kubernetes.io/name: *provisioner
     kustomize.toolkit.fluxcd.io/substitute: disabled
