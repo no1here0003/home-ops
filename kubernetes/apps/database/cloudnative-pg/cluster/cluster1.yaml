@@ -41,7 +41,7 @@ spec:
         compression: bzip2
         maxParallel: 8
       destinationPath: s3://cnpg/
-      endpointURL: http://minio.${SECRET_DOMAIN}
+      endpointURL: https://minio.${SECRET_DOMAIN}
       # Note: serverName version needs to be inclemented
       # when recovering from an existing cnpg cluster
       serverName: &currentCluster cluster1-v1
