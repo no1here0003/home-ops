@@ -4,7 +4,7 @@ kind: HelmRelease
 metadata:
   name: tautulli
 spec:
-  interval: 5m
+  interval: 30m
   chart:
     spec:
       # renovate: registryUrl=https://bjw-s.github.io/helm-charts/
@@ -25,18 +25,8 @@ spec:
 
     controllers:
       main:
-        type: statefulset
         annotations:
           reloader.stakater.com/auto: "true"
-
-        statefulset:
-          volumeClaimTemplates:
-            - name: config
-              accessMode: ReadWriteOnce
-              size: 10Gi
-              storageClass: longhorn-config
-              globalMounts:
-                - path: /config
 
         pod:
           enableServiceLinks: false

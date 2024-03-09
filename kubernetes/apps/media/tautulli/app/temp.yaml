@@ -28,7 +28,7 @@ spec:
     persistence:
       temp:
         enabled: true
-        existingClaim: tautulli-config
+        existingClaim: tautulli
         mountPath: /tautulli/config
     resources:
       requests:
