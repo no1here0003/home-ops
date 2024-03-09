@@ -111,9 +111,6 @@ spec:
           cert-manager.io/cluster-issuer: letsencrypt-production
           kubernetes.io/tls-acme: "true"
           external-dns/is-public: "true"
-          nginx.ingress.kubernetes.io/configuration-snippet: |
-            more_set_headers "Host $host";
-            more_set_headers "X-Forwarded-For $remote_addr"
         hosts:
           - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
             paths:
@@ -121,21 +118,6 @@ spec:
                 service:
                   name: main
                   port: http
-        tls:
-          - hosts:
-              - *host
-      api:
-        enabled: true
-        className: nginx
-        annotations:
-          external-dns.alpha.kubernetes.io/target: ${SECRET_DOMAIN}
-          cert-manager.io/cluster-issuer: letsencrypt-production
-          kubernetes.io/tls-acme: "true"
-          external-dns/is-public: "true"
-          nginx.ingress.kubernetes.io/configuration-snippet: |
-            more_set_headers "Host $host";
-            more_set_headers "X-Forwarded-For $remote_addr"
-        hosts:
           - host: &s3Host s3.${SECRET_DOMAIN}
             paths:
               - path: /
@@ -144,6 +126,7 @@ spec:
                   port: s3
         tls:
           - hosts:
+              - *host
               - *s3Host
               
     persistence:
