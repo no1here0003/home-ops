@@ -47,14 +47,13 @@ spec:
           external-dns/is-public: "true"
           external-dns.alpha.kubernetes.io/target: ${SECRET_DOMAIN}
         hosts:
-          - &host "auth.${SECRET_DOMAIN}"
-        paths:
-          - /
-
+          - host: &host auth.${SECRET_DOMAIN}
+            paths:
+              - path: /
         tls:
-          - hosts: 
+          - secretName: authentik.tls
+            hosts:
               - *host
-            secretName: {{ .Release.Name }}.tls
 
     worker:
       replicas: 1
