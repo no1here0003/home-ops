@@ -87,7 +87,7 @@ spec:
       main:
         type: LoadBalancer
         annotations:
-          io.cilium/lb-ipam-ips: *loadBalancerIP
+          io.cilium/lb-ipam-ips: &loadBalancerIP ${SVC_JELLYFIN_ADDR}
         externalTrafficPolicy: Cluster
         ports:
           http:
