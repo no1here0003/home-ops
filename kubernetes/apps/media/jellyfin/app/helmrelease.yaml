@@ -80,8 +80,11 @@ spec:
             resources:
               requests:
                 gpu.intel.com/i915: 1
-                cpu: 100m
+                cpu: 1
                 memory: 16Gi
+              limits:
+                gpu.intel.com/i915: 1
+                memory: 64Gi
     service:
       main:
         type: LoadBalancer
@@ -110,7 +113,7 @@ spec:
         tls:
           - hosts:
               - *host
-            secretName: "{{ .Release.Name }}-tls"
+            secretName: "{{ .Release.Name }}.tls"
 
     persistence:
       config:
