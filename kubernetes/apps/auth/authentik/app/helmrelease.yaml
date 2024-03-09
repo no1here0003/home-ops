@@ -54,7 +54,7 @@ spec:
         tls:
           - hosts: 
               - *host
-            secretName: "{{ .Release.Name }}.tls"
+            secretName: authentik.tls
 
     worker:
       replicas: 1
