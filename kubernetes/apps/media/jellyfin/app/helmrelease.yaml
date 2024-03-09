@@ -58,9 +58,10 @@ spec:
               tag: 10.8.13-1
             env:
               DOTNET_SYSTEM_IO_DISABLEFILELOCKING: "true"
+              TZ: ${TIMEZONE}
               JELLYFIN_FFmpeg__probesize: 50000000
               JELLYFIN_FFmpeg__analyzeduration: 50000000
-              JELLYFIN_PublishedServerUrl: &loadBalancerIP ${SVC_JELLYFIN_ADDR}
+              JELLYFIN_PublishedServerUrl: &host "jellyfin.${SECRET_DOMAIN2}"
               TZ: ${TIMEZONE}
             probes:
               liveness: &probes
@@ -81,10 +82,7 @@ spec:
               requests:
                 gpu.intel.com/i915: 1
                 cpu: 100m
-                memory: 8Gi
-              limits:
-                gpu.intel.com/i915: 1
-                memory: 64Gi
+                memory: 16Gi
     service:
       main:
         type: LoadBalancer
@@ -104,7 +102,7 @@ spec:
           external-dns/is-public: "true"
           cert-manager.io/cluster-issuer: letsencrypt-production
         hosts:
-          - host: &host "jellyfin.${SECRET_DOMAIN2}"
+          - host: *host
             paths:
               - path: /
                 service:
@@ -113,7 +111,7 @@ spec:
         tls:
           - hosts:
               - *host
-          - secretName: jellyfin-tls-secret
+            secretName: "{{ .Release.Name }}-tls"
 
     persistence:
       config:
@@ -151,9 +149,12 @@ spec:
         globalMounts:
           - path: /backups
 
-      transcode:
-        enabled: true
+      tmp:
         type: emptyDir
-        medium: Memory
+        globalMounts:
+          - path: /tmp
+
+      transcode:
+        type: emptyDir
         globalMounts:
           - path: /transcode
