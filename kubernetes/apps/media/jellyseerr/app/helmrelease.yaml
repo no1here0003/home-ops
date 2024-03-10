@@ -43,9 +43,9 @@ spec:
               PORT: 8080
             resources:
               requests:
-                memory: 443M
+                memory: 512M
               limits:
-                memory: 536M
+                memory: 1G
 
     service:
       main:
@@ -75,6 +75,7 @@ spec:
         tls:
           - hosts:
               - *host
+            secretName: jellyseer.tls
 
 
     persistence:
