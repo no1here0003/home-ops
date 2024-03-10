@@ -7,4 +7,5 @@ resources:
   - ./overseerr/ks.yaml
   - ./tautulli/ks.yaml
   - ./jellyfin/ks.yaml
+  - ./jellyfin/ks-test.yaml
   - ./jellyseerr/ks.yaml
