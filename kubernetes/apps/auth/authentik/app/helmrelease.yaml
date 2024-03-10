@@ -81,13 +81,6 @@ spec:
       enabled: true
       auth:
         enabled: true
-      master:
-        resources:
-          requests:
-            cpu: 100m
-            memory: 128Mi
-          limits:
-            memory: 512Mi
 
       master:
         persistence:
@@ -95,8 +88,8 @@ spec:
           size: 1Gi
         resources:
           requests:
-            cpu: 15m
-            memory: 50Mi
+            cpu: 100m
+            memory: 128Mi
           limits:
             memory: 512Mi
       commonConfiguration: |-
