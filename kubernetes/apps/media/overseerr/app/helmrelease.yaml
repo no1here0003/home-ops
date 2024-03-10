@@ -86,3 +86,5 @@ spec:
       config:
         enabled: true
         existingClaim: overseerr
+        globalMounts:
+          - path: /app/config
