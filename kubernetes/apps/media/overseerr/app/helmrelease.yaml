@@ -28,18 +28,8 @@ spec:
 
     controllers:
       main:
-        type: statefulset
         annotations:
           reloader.stakater.com/auto: "true"
-
-        statefulset:
-          volumeClaimTemplates:
-            - name: config
-              accessMode: ReadWriteOnce
-              size: 2Gi
-              storageClass: longhorn-config
-              globalMounts:
-                - path: /app/config
 
         pod:
           enableServiceLinks: false
@@ -76,7 +66,7 @@ spec:
         tls:
           - hosts:
               - "request.${SECRET_DOMAIN}"
-          - secretName: overseer-tls
+            secretName: overseer.tls
 
     service:
       main:
@@ -91,3 +81,8 @@ spec:
       limits:
         cpu: 500m
         memory: 3744M
+
+    persistence:
+      config:
+        enabled: true
+        existingClaim: overseerr

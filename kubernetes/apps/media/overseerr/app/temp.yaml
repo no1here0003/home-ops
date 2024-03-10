@@ -28,7 +28,7 @@ spec:
     persistence:
       downloads:
         enabled: true
-        existingClaim: overseerr-config
+        existingClaim: overseerr
         mountPath: /overseerr/config
     resources:
       requests:
