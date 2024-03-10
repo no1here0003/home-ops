@@ -87,13 +87,9 @@ spec:
                 memory: 64Gi
     service:
       main:
-        type: LoadBalancer
-        annotations:
-          io.cilium/lb-ipam-ips: &loadBalancerIP ${SVC_JELLYFIN_ADDR}
-        externalTrafficPolicy: Cluster
         ports:
           http:
-            port: 8096
+            port: *port
     ingress:
       main:
         enabled: true
