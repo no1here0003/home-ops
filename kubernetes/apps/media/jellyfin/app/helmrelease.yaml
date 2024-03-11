@@ -87,10 +87,9 @@ spec:
     service:
       jellyfin:
         controller: jellyfin
-        externalTrafficPolicy: Cluster
         ports:
           http:
-            port: 8096
+            port: *port
     ingress:
       jellyfin:
         enabled: true
