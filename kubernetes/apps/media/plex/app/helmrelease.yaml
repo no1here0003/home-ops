@@ -120,9 +120,7 @@ spec:
           - secretName: plex.tls
 
     persistence:
-
       config:
-        enabled: true
         existingClaim: plex
 
       media:
