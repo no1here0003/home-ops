@@ -117,7 +117,7 @@ spec:
         tls:
           - hosts:
               - *host
-          - secretName: plex.tls
+            secretName: plex.tls
 
     persistence:
       config:
