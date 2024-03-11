@@ -59,6 +59,7 @@ spec:
                   periodSeconds: 5
     service:
       overseerr:
+        controller: overseerr
         ports:
           http:
             port: 5055
