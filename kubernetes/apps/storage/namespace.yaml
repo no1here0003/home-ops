@@ -12,4 +12,3 @@ metadata:
   name: nfs-system
   labels:
     kustomize.toolkit.fluxcd.io/prune: disabled
-

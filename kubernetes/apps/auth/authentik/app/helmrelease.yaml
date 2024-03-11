@@ -52,7 +52,7 @@ spec:
           - /
 
         tls:
-          - hosts: 
+          - hosts:
               - *host
             secretName: authentik.tls
 

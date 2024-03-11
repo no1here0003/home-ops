@@ -131,7 +131,7 @@ spec:
           cert-manager.io/cluster-issuer: letsencrypt-production
           kubernetes.io/tls-acme: "true"
           external-dns/is-public: "true"
-        hosts:        
+        hosts:
           - host: &s3Host s3.${SECRET_DOMAIN}
             paths:
               - path: /
@@ -142,7 +142,7 @@ spec:
           - hosts:
               - *s3Host
             secretName: s3.tls
-              
+
     persistence:
       config:
         enabled: true

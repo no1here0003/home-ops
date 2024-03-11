@@ -65,13 +65,13 @@ spec:
           kubernetes.io/tls-acme: "true"
           external-dns/is-public: "true"
         hosts:
-        - host: &host "request.${SECRET_DOMAIN2}"
-          paths:
-            - path: /
-              pathType: Prefix
-              service:
-                name: main
-                port: http
+          - host: &host "request.${SECRET_DOMAIN2}"
+            paths:
+              - path: /
+                pathType: Prefix
+                service:
+                  name: main
+                  port: http
         tls:
           - hosts:
               - *host
