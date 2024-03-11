@@ -2,11 +2,13 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: cluster-apps-bazarr
+  name: &app bazarr
   namespace: flux-system
 spec:
-  # dependsOn:
-  #   - name: cluster-apps-longhorn-recurring-jobs
+  targetNamespace: downloads
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
   path: ./kubernetes/apps/downloads/bazarr/app
   prune: true
   sourceRef:
