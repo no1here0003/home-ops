@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.6.0
+      version: 3.0.1
       interval: 30m
       sourceRef:
         kind: HelmRepository
@@ -29,12 +29,12 @@ spec:
   values:
 
     controllers:
-      main:
+      jellyseerr:
         annotations:
           reloader.stakater.com/auto: "true"
 
         containers:
-          main:
+          app:
             image:
               repository: docker.io/fallenbagel/jellyseerr
               tag: 1.7.0
@@ -47,15 +47,26 @@ spec:
               limits:
                 memory: 1G
 
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+
     service:
-      main:
-        type: ClusterIP
+      jellyseerr:
+        controller: jellyseerr
         ports:
           http:
             port: 8080
 
     ingress:
-      main:
+      jellyseerr:
         enabled: true
         className: "nginx"
         annotations:
@@ -70,7 +81,7 @@ spec:
               - path: /
                 pathType: Prefix
                 service:
-                  name: main
+                  identifier: jellyseerr
                   port: http
         tls:
           - hosts:
@@ -80,7 +91,6 @@ spec:
 
     persistence:
       config:
-        enabled: true
         existingClaim: jellyseerr
         globalMounts:
           - path: /app/config
