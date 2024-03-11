@@ -44,19 +44,20 @@ spec:
             env:
               TZ: "America/New_York"
 
-        probes:
-          liveness:
-            enabled: true
-          readiness:
-            enabled: true
-          startup:
-            enabled: true
-            spec:
-              failureThreshold: 30
-              periodSeconds: 5
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
 
     service:
       tautulli:
+        controller: tautulli
         ports:
           http:
             port: 8181
@@ -64,7 +65,7 @@ spec:
     ingress:
       tautulli:
         enabled: true
-        ingressClassName: "nginx"
+        className: "nginx"
         hosts:
           - host: &host "tautulli.${INTERNAL_DOMAIN}"
             paths:
