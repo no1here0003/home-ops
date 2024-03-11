@@ -10,7 +10,7 @@ spec:
     spec:
       # renovate: registryUrl=https://bjw-s.github.io/helm-charts/
       chart: app-template
-      version: 2.6.0
+      version: 3.0.1
       sourceRef:
         kind: HelmRepository
         name: bjw-s-charts
@@ -25,32 +25,23 @@ spec:
       retries: 5
 
   values:
-    controllers:
-      main:
-        type: statefulset
 
+    defaultPodOptions:
+      securityContext:
+        runAsUser: 568
+        runAsGroup: 568
+        fsGroup: 568
+        fsGroupChangePolicy: "OnRootMismatch"
+        supplementalGroups:
+
+    controllers:
+
+      bazarr:
         annotations:
           reloader.stakater.com/auto: "true"
 
-        statefulset:
-          volumeClaimTemplates:
-            - name: config
-              accessMode: ReadWriteOnce
-              size: 20Gi
-              storageClass: longhorn-config
-              globalMounts:
-                - path: /config
-        pod:
-          securityContext:
-            runAsUser: 568
-            runAsGroup: 568
-            fsGroup: 568
-            fsGroupChangePolicy: OnRootMismatch
-            supplementalGroups:
-              - 65539
-
         containers:
-          main:
+          bazarr:
             image:
               repository: ghcr.io/onedr0p/bazarr
               tag: 1.4.2@sha256:8d4a560d7307d6554bac85c566a49a23f6b47239a031772823cd294acecca72d
@@ -58,8 +49,19 @@ spec:
             env:
               TZ: "America/New_York"
 
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+
     ingress:
-      main:
+      bazarr:
         enabled: true
         className: "nginx"
         hosts:
@@ -67,7 +69,7 @@ spec:
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: bazarr
                   port: http
         tls:
           - hosts:
@@ -75,12 +77,17 @@ spec:
           - secretName: bazarr-tls
 
     service:
-      main:
+      bazarr:
+        controller: bazarr
         ports:
           http:
             port: 6767
 
     persistence:
+      config:
+        enabled: true
+        existingClaim: bazarr
+
       media:
         type: nfs
         server: "${NAS1_ADDR}"
