@@ -9,7 +9,7 @@ spec:
     spec:
       # renovate: registryUrl=https://bjw-s.github.io/helm-charts/
       chart: app-template
-      version: 2.6.0
+      version: 3.0.1
       sourceRef:
         kind: HelmRepository
         name: bjw-s-charts
@@ -26,21 +26,20 @@ spec:
 
   values:
 
+    defaultPodOptions:
+      securityContext:
+        runAsUser: 568
+        runAsGroup: 568
+        fsGroup: 568
+        fsGroupChangePolicy: "OnRootMismatch"
+
     controllers:
-      main:
+      overseerr:
         annotations:
           reloader.stakater.com/auto: "true"
 
-        pod:
-          enableServiceLinks: false
-          securityContext:
-            runAsUser: 568
-            runAsGroup: 568
-            fsGroup: 568
-            fsGroupChangePolicy: "OnRootMismatch"
-
         containers:
-          main:
+          overseerr:
             image:
               repository: ghcr.io/sct/overseerr
               tag: 1.33.2
@@ -48,8 +47,24 @@ spec:
               TZ: "America/New_York"
               LOG_LEVEL: "info"
 
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+    service:
+      overseerr:
+        ports:
+          http:
+            port: 5055
+
     ingress:
-      main:
+      overseerr:
         enabled: true
         className: "nginx"
         annotations:
@@ -57,22 +72,16 @@ spec:
           external-dns/is-public: "true"
           cert-manager.io/cluster-issuer: letsencrypt-production
         hosts:
-          - host: "request.${SECRET_DOMAIN}"
+          - host: &host "request.${SECRET_DOMAIN}"
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: overseerr
                   port: http
         tls:
           - hosts:
-              - "request.${SECRET_DOMAIN}"
+              - *host
             secretName: overseer.tls
-
-    service:
-      main:
-        ports:
-          http:
-            port: 5055
 
     resources:
       requests:
@@ -80,11 +89,10 @@ spec:
         memory: 291M
       limits:
         cpu: 500m
-        memory: 3744M
+        memory: 4Gi
 
     persistence:
       config:
-        enabled: true
         existingClaim: overseerr
         globalMounts:
           - path: /app/config
