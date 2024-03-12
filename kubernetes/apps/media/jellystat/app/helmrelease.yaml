@@ -34,7 +34,6 @@ spec:
   values:
     controllers:
       jellystat:
-        type: statefulset
 
         annotations:
           reloader.stakater.com/auto: "true"
