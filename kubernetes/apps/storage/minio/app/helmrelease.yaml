@@ -148,16 +148,7 @@ spec:
 
     persistence:
       config:
+        type: nfs
         existingClaim: minio-nfs
         globalMounts:
           - path: /data
-
-  valuesFrom:
-    - kind: Secret
-      name: *secret
-      valuesKey: NAS3_ADDR
-      targetPath: persistence.config.server
-    - kind: Secret
-      name: *secret
-      valuesKey: MINIO_NFS_PATH
-      targetPath: persistence.config.path
