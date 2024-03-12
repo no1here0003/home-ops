@@ -10,7 +10,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: local-hostpath
+    - name: local-path-provisioner
     - name: external-secrets
   path: ./kubernetes/apps/monitoring/grafana/app
   prune: true
