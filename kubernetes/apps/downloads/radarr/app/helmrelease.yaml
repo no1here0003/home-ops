@@ -62,13 +62,13 @@ spec:
 
     service:
       radarr:
-        controller: prowlarr
+        controller: radarr
         ports:
           http:
             port: 7878
 
     ingress:
-      main:
+      radarr:
         enabled: true
         className: "nginx"
         hosts:
