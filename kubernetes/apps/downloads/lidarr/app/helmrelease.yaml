@@ -79,7 +79,7 @@ spec:
 
     persistence:
       config:
-        existingClaim: liadrr
+        existingClaim: lidarr
 
       media:
         type: nfs
