@@ -5,12 +5,12 @@ metadata:
   name: sabnzbd
   namespace: downloads
 spec:
-  interval: 5m
+  interval: 30m
   chart:
     spec:
       # renovate: registryUrl=https://bjw-s.github.io/helm-charts/
       chart: app-template
-      version: 2.6.0
+      version: 3.0.2
       sourceRef:
         kind: HelmRepository
         name: bjw-s-charts
@@ -25,33 +25,24 @@ spec:
       retries: 5
 
   values:
-    controllers:
-      main:
-        type: statefulset
 
-        statefulset:
-          volumeClaimTemplates:
-            - name: config
-              accessMode: ReadWriteOnce
-              size: 2Gi
-              storageClass: longhorn-config
-              globalMounts:
-                - path: /config
+    defaultPodOptions:
+      securityContext:
+        runAsUser: 568
+        runAsGroup: 568
+        fsGroup: 568
+        fsGroupChangePolicy: OnRootMismatch
+        supplementalGroups:
+          - 65539
+
+    controllers:
+      sabnzbd:
 
         annotations:
           reloader.stakater.com/auto: "true"
 
-        pod:
-          securityContext:
-            runAsUser: 568
-            runAsGroup: 568
-            fsGroup: 568
-            fsGroupChangePolicy: OnRootMismatch
-            supplementalGroups:
-              - 65539
-
         containers:
-          main:
+          sabnzbd:
             image:
               repository: ghcr.io/onedr0p/sabnzbd
               tag: 4.2.3@sha256:2daf5e89096f47f4d3a0c28f0bf84323f91b797c30d4efe3d7f29f2121bc0f3c
@@ -60,13 +51,14 @@ spec:
               SABNZBD__PORT: &port 8080
 
     service:
-      main:
+      sabnzbd:
+        controller: sabnzbd
         ports:
           http:
             port: *port
 
     ingress:
-      main:
+      sabnzbd:
         enabled: true
         className: "nginx"
         hosts:
@@ -74,15 +66,19 @@ spec:
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: sabnzbd
                   port: http
         tls:
           - hosts:
               - *host
-          - secretName: sabnzbd-tls
+            secretName: sabnzbd.tls
 
 
     persistence:
+
+      config:
+        enabled: true
+        existingClaim: sabnzbd
 
       downloads:
         enabled: true
