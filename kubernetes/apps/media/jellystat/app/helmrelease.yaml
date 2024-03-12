@@ -71,7 +71,7 @@ spec:
     ingress:
       jellystat:
         enabled: true
-        ingressClassName: internal
+        className: nginx
         annotations:
           external-dns.alpha.kubernetes.io/target: ${SECRET_DOMAIN}
           cert-manager.io/cluster-issuer: letsencrypt-production
