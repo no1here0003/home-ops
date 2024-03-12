@@ -5,17 +5,16 @@ metadata:
   name: radarr
   namespace: downloads
 spec:
-  interval: 5m
+  interval: 30m
   chart:
     spec:
       # renovate: registryUrl=https://bjw-s.github.io/helm-charts/
       chart: app-template
-      version: 2.6.0
+      version: 3.0.1
       sourceRef:
         kind: HelmRepository
         name: bjw-s-charts
         namespace: flux-system
-      interval: 30m
 
   install:
     remediation:
@@ -25,22 +24,22 @@ spec:
       retries: 5
   values:
 
+    defaultPodOptions:
+      securityContext:
+        runAsUser: 568
+        runAsGroup: 568
+        fsGroup: 568
+        fsGroupChangePolicy: OnRootMismatch
+        supplementalGroups:
+          - 65539
+
     controllers:
-      main:
+      radarr:
         annotations:
           reloader.stakater.com/auto: "true"
 
-        pod:
-          securityContext:
-            runAsUser: 568
-            runAsGroup: 568
-            fsGroup: 568
-            fsGroupChangePolicy: OnRootMismatch
-            supplementalGroups:
-              - 65539
-
         containers:
-          main:
+          radarr:
             image:
               repository: ghcr.io/onedr0p/radarr-develop
               tag: 5.4.1.8654@sha256:f59912e61010a72d38f9973b1695329889666355df09d18d15ec4f95ff45ed13
@@ -50,11 +49,23 @@ spec:
               RADARR__PORT: &port 7878
               RADARR__AUTHENTICATION_METHOD: External
 
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+
     service:
-      main:
+      radarr:
+        controller: prowlarr
         ports:
           http:
-            port: *port
+            port: 7878
 
     ingress:
       main:
@@ -65,17 +76,16 @@ spec:
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: radarr
                   port: http
         tls:
           - hosts:
               - *host
-          - secretName: radarr-tls
+            secretName: radarr.tls
 
     persistence:
 
       config:
-        enabled: true
         existingClaim: radarr
 
       media:
