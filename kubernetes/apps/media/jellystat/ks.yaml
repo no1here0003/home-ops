@@ -1,3 +1,6 @@
+##################################################
+# it looks like this tries to create the database by default and is failing because it's there, even though it's the owner?
+##################################################
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
@@ -21,7 +24,3 @@ spec:
   retryInterval: 1m
   timeout: 3m
   wait: false
-  postBuild:
-    substitute:
-      APP: *app
-      VOLSYNC_CAPACITY: 300Gi
