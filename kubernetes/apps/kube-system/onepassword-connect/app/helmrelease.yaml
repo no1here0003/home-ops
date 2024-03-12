@@ -95,18 +95,23 @@ spec:
                   secretKeyRef:
                     name: onepassword-connect-secret
                     key: 1password-credentials.json
-            readinessProbe:
-              httpGet:
-                path: /health
-                port: *port2
-              initialDelaySeconds: 15
-            livenessProbe:
-              httpGet:
-                path: /heartbeat
-                port: *port2
-              failureThreshold: 3
-              periodSeconds: 30
-              initialDelaySeconds: 15
+            probes:
+              readiness:
+                enabled: true
+                custom: true
+                httpGet:
+                  path: /health
+                  port: *port2
+                initialDelaySeconds: 15
+              liveness:
+                enabled: true
+                custom: true
+                httpGet:
+                  path: /heartbeat
+                  port: *port2
+                failureThreshold: 3
+                periodSeconds: 30
+                initialDelaySeconds: 15
 
 
     service:
