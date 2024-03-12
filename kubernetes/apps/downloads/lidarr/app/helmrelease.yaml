@@ -79,7 +79,7 @@ spec:
 
     persistence:
       config:
-        existingClaim: sonarr
+        existingClaim: liadrr
 
       media:
         type: nfs
