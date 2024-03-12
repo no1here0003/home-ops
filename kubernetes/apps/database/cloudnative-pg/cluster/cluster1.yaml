@@ -10,7 +10,7 @@ spec:
   primaryUpdateStrategy: unsupervised
   storage:
     size: 50Gi
-    storageClass: longhorn-database
+    storageClass: longhorn
   superuserSecret:
     name: cloudnative-pg-secret
   enableSuperuserAccess: true
@@ -53,7 +53,7 @@ spec:
           name: cloudnative-pg-secret
           key: aws-secret-access-key
   # Note: previousCluster needs to be set to the name of the previous
-  cluster when recovering from an existing cnpg cluster
+  # cluster when recovering from an existing cnpg cluster
   bootstrap:
     recovery:
       source: &previousCluster cluster1-v1
