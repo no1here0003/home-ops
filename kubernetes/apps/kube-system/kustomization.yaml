@@ -5,7 +5,7 @@ resources:
   - ./namespace.yaml
   - ./cilium/ks.yaml
   - ./coredns/ks.yaml
-  - ./democratic-csi.yaml
+  - ./democratic-csi/ks.yaml
   - ./external-secrets/ks.yaml
   - ./intel-device-plugin/ks.yaml
   - ./intel-device-plugin-gpu/ks.yaml
