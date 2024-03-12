@@ -1,0 +1,99 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.thesteamedcrab.com/helmrelease_v2beta1.json
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: &app jellystat
+  namespace: media
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: app-template
+      version: 3.0.2
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s-charts
+        namespace: flux-system
+
+  maxHistory: 3
+
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+
+  uninstall:
+    keepHistory: false
+
+  values:
+    controllers:
+      jellystat:
+        type: statefulset
+
+        annotations:
+          reloader.stakater.com/auto: "true"
+
+        initContainers:
+          init-db:
+            image:
+              repository: ghcr.io/onedr0p/postgres-init
+              tag: 16
+
+            envFrom: &envFrom
+              - secretRef:
+                  name: *app
+
+        containers:
+          jellystat:
+            image:
+              repository: docker.io/cyfershepard/jellystat
+              tag: unstable@sha256:6158fd84ab5a20a27db06c1e20ea30017b7309d86f415f9118184a6d662b8b8d
+
+            env:
+              TZ: ${TIMEZONE}
+
+            envFrom:
+              - secretRef:
+                  name: *app
+
+    service:
+      jellystat:
+        controller: jellystat
+        ports:
+          http:
+            port: 3000
+
+    ingress:
+      jellystat:
+        enabled: true
+        ingressClassName: internal
+        annotations:
+          external-dns.alpha.kubernetes.io/target: ${SECRET_DOMAIN}
+          cert-manager.io/cluster-issuer: letsencrypt-production
+          kubernetes.io/tls-acme: "true"
+          external-dns/is-public: "true"
+        hosts:
+          - host: &host "jellystat.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                pathType: Prefix
+                service:
+                  identifier: jellystat
+                  port: http
+        tls:
+          - hosts:
+              - *host
+
+    persistence:
+      backups:
+        type: nfs
+        server: "${NAS2_ADDR}"
+        path: /volume1/Kubernetes/sonarr
+        globalMounts:
+          - path: /app/backend/backup-data
