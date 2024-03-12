@@ -50,6 +50,17 @@ spec:
               TZ: "America/New_York"
               SABNZBD__PORT: &port 8080
 
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+
     service:
       sabnzbd:
         controller: sabnzbd

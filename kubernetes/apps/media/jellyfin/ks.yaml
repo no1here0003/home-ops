@@ -10,7 +10,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: cluster-apps-intel-device-plugins-gpu
+    - name: &app intel-device-plugins-gpu
     - name: cluster-apps-longhorn-recurring-jobs
   path: ./kubernetes/apps/media/jellyfin/app
   prune: true
