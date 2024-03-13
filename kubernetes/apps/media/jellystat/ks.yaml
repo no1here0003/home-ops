@@ -14,7 +14,7 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: intel-device-plugins-gpu
-    - name: cluster-apps-longhorn-recurring-jobs
+    - name: longhorn-recurring-jobs
   path: ./kubernetes/apps/media/jellystat/app
   prune: true
   sourceRef:

@@ -10,7 +10,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: cluster-apps-longhorn-recurring-jobs
+    - name: longhorn-recurring-jobs
   path: ./kubernetes/apps/downloads/sabnzbd/app
   prune: true
   sourceRef:
