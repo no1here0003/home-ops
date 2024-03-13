@@ -2,7 +2,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: longhorn-recurring-jobs
+  name: &app longhorn-recurring-jobs
   namespace: flux-system
 spec:
   targetNamespace: storage
