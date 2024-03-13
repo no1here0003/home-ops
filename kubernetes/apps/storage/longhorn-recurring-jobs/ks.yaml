@@ -5,6 +5,10 @@ metadata:
   name: cluster-apps-longhorn-recurring-jobs
   namespace: flux-system
 spec:
+  targetNamespace: flux-system
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
   dependsOn:
     - name: cluster-apps-longhorn
   path: ./kubernetes/apps/storage/longhorn-recurring-jobs/app
