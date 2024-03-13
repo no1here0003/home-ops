@@ -16,7 +16,7 @@ spec:
         kind: HelmRepository
         name: tyzbit
         namespace: flux-system
-  interval: 2m1s
+  interval: 30m
   values:
     minuteStep: 5
     hourStep: 2
