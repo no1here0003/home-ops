@@ -36,7 +36,6 @@ spec:
           - 65539
 
     controllers:
-
       bazarr:
         annotations:
           reloader.stakater.com/auto: "true"
