@@ -2,13 +2,13 @@
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationDestination
 metadata:
-  name: "jellyseerr-ondemand"
+  name: "jellyseerr-ondemand2"
   namespace: "media"
 spec:
   trigger:
     manual: restore-once
   restic:
-    repository: "jellyseerr-volsync"
+    repository: "jellyseerr-volsync-secret"
     destinationPVC: "jellyseerr"
     copyMethod: Direct
     storageClassName: longhorn
@@ -16,7 +16,7 @@ spec:
     # accessModes: ["ReadWriteMany"]
     # IMPORTANT NOTE:
     #   Set to the last X number of snapshots to restore from
-    previous: 6
+    previous: 20
     # OR;
     # IMPORTANT NOTE:
     #   On bootstrap set `restoreAsOf` to the time the old cluster was destroyed.
