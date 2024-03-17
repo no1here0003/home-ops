@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: plex
+  name: plex-bkp
   namespace: media
 spec:
   accessModes:
@@ -10,4 +10,4 @@ spec:
   resources:
     requests:
       storage: 300Gi
-  storageClassName: longhorn-plex
+  storageClassName: longhorn
