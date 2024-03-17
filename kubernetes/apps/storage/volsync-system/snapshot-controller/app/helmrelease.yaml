@@ -24,6 +24,9 @@ spec:
     remediation:
       strategy: rollback
       retries: 3
+  dependsOn:
+    - name: longhorn
+      namespace: storage
   values:
     controller:
       volumeSnapshotClasses:

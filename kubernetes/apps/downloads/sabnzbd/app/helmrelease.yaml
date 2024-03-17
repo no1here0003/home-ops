@@ -23,7 +23,11 @@ spec:
   upgrade:
     remediation:
       retries: 5
-
+  dependsOn:
+    - name: longhorn
+      namespace: storage
+    - name: volsync
+      namespace: volsync-system
   values:
 
     defaultPodOptions:

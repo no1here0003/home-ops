@@ -24,6 +24,8 @@ spec:
   uninstall:
     keepHistory: false
   dependsOn:
+    - name: minio
+      namespace: storage
     - name: longhorn
       namespace: storage
   values:

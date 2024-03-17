@@ -25,6 +25,10 @@ spec:
   dependsOn:
     - name: snapshot-controller
       namespace: volsync-system
+    - name: longhorn
+      namespace: storage
+    - name: minio
+      namespace: storage
   values:
     manageCRDs: true
     image: &image

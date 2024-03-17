@@ -15,7 +15,11 @@ spec:
         kind: HelmRepository
         name: bjw-s-charts
         namespace: flux-system
-
+  dependsOn:
+    - name: longhorn
+      namespace: storage
+    - name: volsync
+      namespace: volsync-system
   install:
     remediation:
       retries: 5

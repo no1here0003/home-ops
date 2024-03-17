@@ -31,6 +31,8 @@ spec:
       namespace: kube-system
     - name: longhorn
       namespace: storage
+    - name: volsync
+      namespace: volsync-system
   values:
 
     defaultPodOptions:
