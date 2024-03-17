@@ -10,7 +10,7 @@ spec:
         - secretRef:
             name: bazarr
       command: ['pgloader']
-      args: ['--with "quote identifiers"','with "data only"','--cast "column table_blacklist.timestamp to timestamp"','--cast "column table_blacklist_movie.timestamp to timestamp"','--cast "column table_history.timestamp to timestamp"','--cast "column table_history_movie.timestamp to timestamp"','/config/db/bazarr.db','postgresql://$(POSTGRES_USER):$(PGDB_PASSWORD)@$(POSTGRES_HOST)/$(POSTGRES_DB)'] 
+      args: ['--with "quote identifiers"','--with "data only"','--cast "column table_blacklist.timestamp to timestamp"','--cast "column table_blacklist_movie.timestamp to timestamp"','--cast "column table_history.timestamp to timestamp"','--cast "column table_history_movie.timestamp to timestamp"','/config/db/bazarr.db','postgresql://$(POSTGRES_USER):$(PGDB_PASSWORD)@$(POSTGRES_HOST)/$(POSTGRES_DB)'] 
       volumeMounts:
         - mountPath: /config
           name: config
