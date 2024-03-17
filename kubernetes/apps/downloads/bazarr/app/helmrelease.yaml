@@ -41,14 +41,14 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
 
-        initContainers:
-          init-db:
-            image:
-              repository: ghcr.io/onedr0p/postgres-init
-              tag: 16.2
-            envFrom: &envFrom
-              - secretRef:
-                  name: bazarr
+        # initContainers:
+        #   init-db:
+        #     image:
+        #       repository: ghcr.io/onedr0p/postgres-init
+        #       tag: 16.2
+        #     envFrom: &envFrom
+        #       - secretRef:
+        #           name: bazarr
 
         containers:
           bazarr:
