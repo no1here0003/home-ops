@@ -36,6 +36,7 @@ spec:
           - 65539
 
     controllers:
+
       bazarr:
         annotations:
           reloader.stakater.com/auto: "true"
@@ -94,6 +95,10 @@ spec:
             port: 6767
 
     persistence:
+      config:
+        enabled: true
+        existingClaim: bazarr
+
       media:
         type: nfs
         server: "${NAS1_ADDR}"
