@@ -95,7 +95,6 @@ spec:
             port: 6767
 
     persistence:
-
       media:
         type: nfs
         server: "${NAS1_ADDR}"
