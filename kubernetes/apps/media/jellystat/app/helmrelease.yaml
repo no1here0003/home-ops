@@ -71,12 +71,12 @@ spec:
         enabled: true
         className: nginx
         annotations:
-          external-dns.alpha.kubernetes.io/target: ${SECRET_DOMAIN}
+          external-dns.alpha.kubernetes.io/target: ${SECRET_DOMAIN2}
           cert-manager.io/cluster-issuer: letsencrypt-production
           kubernetes.io/tls-acme: "true"
           external-dns/is-public: "true"
         hosts:
-          - host: &host "jellystat.${SECRET_DOMAIN}"
+          - host: &host "jellystat.${SECRET_DOMAIN2}"
             paths:
               - path: /
                 pathType: Prefix
@@ -86,6 +86,7 @@ spec:
         tls:
           - hosts:
               - *host
+            secretName: jellystat.tls
 
     persistence:
       backups:
