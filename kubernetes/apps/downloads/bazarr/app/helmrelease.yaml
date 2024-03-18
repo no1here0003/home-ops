@@ -97,9 +97,6 @@ spec:
             port: 6767
 
     persistence:
-      # config:
-      #   enabled: true
-      #   existingClaim: bazarr
 
       media:
         type: nfs
