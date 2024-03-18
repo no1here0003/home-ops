@@ -57,9 +57,7 @@ spec:
             env:
               TZ: ${TIMEZONE}
 
-            envFrom:
-              - secretRef:
-                  name: *app
+            envFrom: *envFrom
 
     service:
       jellystat:
