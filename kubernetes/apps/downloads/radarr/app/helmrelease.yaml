@@ -98,8 +98,8 @@ spec:
             secretName: radarr.tls
 
     persistence:
-      config:
-        existingClaim: radarr
+      # config:
+      #   existingClaim: radarr
 
       media:
         type: nfs
