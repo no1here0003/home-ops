@@ -20,3 +20,7 @@ spec:
   retryInterval: 1m
   timeout: 3m
   wait: false
+  postBuild:
+    substitute:
+      APP: *app
+      VOLSYNC_CAPACITY: 15Gi

@@ -96,6 +96,8 @@ spec:
             secretName: sonarr.tls
 
     persistence:
+      config:
+        existingClaim: sonarr
 
       media:
         type: nfs
