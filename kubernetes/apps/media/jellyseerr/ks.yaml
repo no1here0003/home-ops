@@ -9,8 +9,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    - name: longhorn-recurring-jobs
   path: ./kubernetes/apps/media/jellyseerr/app
   prune: true
   sourceRef:
