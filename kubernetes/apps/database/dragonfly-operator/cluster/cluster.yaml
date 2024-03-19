@@ -11,10 +11,13 @@ spec:
     dir: "s3://dragonfly"
     cron: "0 * * * *"
   env:
-    secretKeyRef:
-      - name: dragonfly-bkup
+    - name: AWS_ACCESS_KEY_ID
+      secretKeyRef:
+        name: dragonfly-bkup
         key: AWS_ACCESS_KEY_ID
-      - name: dragonfly-bkup
+    - name: AWS_SECRET_ACCESS_KEY
+      secretKeyRef:
+        name: dragonfly-bkup
         key: AWS_SECRET_ACCESS_KEY
   resources:
     requests:
