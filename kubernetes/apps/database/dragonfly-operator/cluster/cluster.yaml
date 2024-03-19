@@ -8,7 +8,7 @@ spec:
   image: docker.dragonflydb.io/dragonflydb/dragonfly:v1.15.1
   replicas: 3
   snapshot:
-    dir: "s3://dragonfly"
+    dir: "s3://https://s3.${SECRET_DOMAIN}/dragonfly"
     cron: "0 * * * *"
   env:
     - name: AWS_ACCESS_KEY_ID
@@ -32,5 +32,3 @@ spec:
     - "--maxmemory=1128Mi"
     - "--proactor_threads=4"
     - "--cluster_mode=emulated"
-    - "--dir s3://dragonfly" 
-    - "--s3_endpoint https://s3.${SECRET_DOMAIN}"
