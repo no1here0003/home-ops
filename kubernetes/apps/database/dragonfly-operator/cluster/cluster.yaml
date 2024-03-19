@@ -7,9 +7,6 @@ metadata:
 spec:
   image: docker.dragonflydb.io/dragonflydb/dragonfly:v1.15.1
   replicas: 3
-  snapshot:
-    dir: "s3:https://s3.${SECRET_DOMAIN}/dragonfly"
-    cron: "0 * * * *"
   env:
     - name: AWS_ACCESS_KEY_ID
       valueFrom:
