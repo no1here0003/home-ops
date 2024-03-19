@@ -3,7 +3,7 @@
 apiVersion: dragonflydb.io/v1alpha1
 kind: Dragonfly
 metadata:
-  name: dragonfly
+  name: dragonfly1
 spec:
   image: docker.dragonflydb.io/dragonflydb/dragonfly:v1.15.1
   replicas: 3
