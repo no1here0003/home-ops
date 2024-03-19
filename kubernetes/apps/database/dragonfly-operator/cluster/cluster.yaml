@@ -25,7 +25,7 @@ spec:
     - "--proactor_threads=4"
     - "--cluster_mode=emulated"
     - "--dir s3://dragonfly" 
-    - "--s3_endpoint s3://minio.${SECRET_DOMAIN}"
+    - "--s3_endpoint https://s3.${SECRET_DOMAIN}"
   snapshot:
     cron: "* * * * *"
     persistentVolumeClaimSpec:
