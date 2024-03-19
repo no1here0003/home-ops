@@ -73,14 +73,16 @@ spec:
       error_reporting:
         enabled: false
 
+      redis:
+        host: dragonfly1.database
+        password: ""
+
     prometheus:
       rules:
         enabled: true
 
     redis:
-      enabled: true
-      auth:
-        enabled: true
+      enabled: false
 
       master:
         persistence:
