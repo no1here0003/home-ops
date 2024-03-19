@@ -5,4 +5,4 @@ kind: Kustomization
 namespace: dragonfly-operator-system
 resources:
   - ./externalsecrets.yaml
-  - ./helmrelease.yaml
+  - ./cluster.yaml
