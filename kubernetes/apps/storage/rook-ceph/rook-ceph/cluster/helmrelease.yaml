@@ -84,7 +84,7 @@ spec:
         enabled: true
         urlPrefix: /
         ssl: false
-        prometheusEndpoint: http://kube-prometheus-stack-prometheus.observability.svc.cluster.local:9090
+        prometheusEndpoint: http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090
       storage:
         useAllNodes: true
         useAllDevices: true
@@ -205,7 +205,7 @@ spec:
             region: us-east-1
         ingress:
           enabled: true
-          ingressClassName: internal
+          ingressClassName: nginx
           host:
             name: &host rgw.${INTERNAL_DOMAIN}
             path: /
