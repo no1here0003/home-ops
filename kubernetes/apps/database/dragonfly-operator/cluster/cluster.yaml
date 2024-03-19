@@ -10,9 +10,12 @@ spec:
   snapshot:
     dir: "s3://dragonfly"
     cron: "0 * * * *"
-  envFrom:
-    - secretKey:
-        name: dragonfly-bkup
+  env:
+    secretKeyRef:
+      - name: dragonfly-bkup
+        key: AWS_ACCESS_KEY_ID
+      - name: dragonfly-bkup
+        key: AWS_SECRET_ACCESS_KEY
   resources:
     requests:
       cpu: 100m
