@@ -36,7 +36,7 @@ spec:
       guaranteedEngineManagerCPU: 20
       guaranteedReplicaManagerCPU: 20
       defaultDataPath: /var/lib/longhorn
-      restoreVolumeRecurringJobs: true
+      restoreVolumeRecurringJobs: false
       concurrentAutomaticEngineUpgradePerNodeLimit: 3
       defaultLonghornStaticStorageClass: longhorn
 
