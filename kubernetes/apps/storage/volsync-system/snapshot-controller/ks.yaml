@@ -9,8 +9,6 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    - name: nfs-provisioner
   path: ./kubernetes/apps/storage/volsync-system/snapshot-controller/app
   prune: true
   sourceRef:
