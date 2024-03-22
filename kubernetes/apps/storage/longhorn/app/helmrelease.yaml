@@ -25,7 +25,8 @@ spec:
   values:
 
     defaultSettings:
-      defaultReplicaCount: 3
+      defaultReplicaCount: 2
+      snapshotMaxCount: 1
       backupTarget: ${NFS_BACKUP}
       # Below requires that nodes used for storage have the label
       # node.longhorn.io/create-default-disk=true
