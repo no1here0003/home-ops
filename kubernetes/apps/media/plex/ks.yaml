@@ -25,3 +25,4 @@ spec:
       APP: *app
       VOLSYNC_CAPACITY: 300Gi
       VOLSYNC_CACHE_CAPACITY: 20Gi
+      VOLSYNC_SCHEDULE: "30 * * * *"

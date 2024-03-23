@@ -2,10 +2,10 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: longhorn
+  name: &app longhorn
   namespace: storage
 spec:
-  releaseName: longhorn
+  releaseName: *app
   interval: 30m
   chart:
     spec:
@@ -25,7 +25,7 @@ spec:
   values:
 
     defaultSettings:
-      defaultReplicaCount: 2
+      defaultReplicaCount: 3
       snapshotMaxCount: 1
       backupTarget: ${NFS_BACKUP}
       # Below requires that nodes used for storage have the label
@@ -46,3 +46,9 @@ spec:
       host: longhorn.${INTERNAL_DOMAIN}
       tls: true
       tlsSecret: longhorn.local-tls
+
+  valuesFrom:
+    - kind: Secret
+      name: *app
+      valuesKey: NAS_BACKUP
+      targetPath: defaultSettings.backupTarget
