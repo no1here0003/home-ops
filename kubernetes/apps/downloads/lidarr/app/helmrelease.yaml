@@ -25,10 +25,8 @@ spec:
       retries: 3
 
   dependsOn:
-    - name: longhorn
-      namespace: storage
-    - name: volsync
-      namespace: volsync-system
+    - name: cloudnative-pg
+      namespace: database
   uninstall:
     keepHistory: false
 
@@ -90,7 +88,6 @@ spec:
             secretName: lidarr.tls
 
     persistence:
-
       media:
         type: nfs
         path: /volume1/Media/Music
