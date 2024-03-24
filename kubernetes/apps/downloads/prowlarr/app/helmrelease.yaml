@@ -101,4 +101,4 @@ spec:
     - kind: Secret
       name: *app
       valuesKey: NAS2_ADDR
-      targetPath: persistence.backups.server
+      targetPath: persistence.backup.server
