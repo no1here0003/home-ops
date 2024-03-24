@@ -2,7 +2,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: bazarr
+  name: &app bazarr
   namespace: downloads
 spec:
   interval: 5m
@@ -97,6 +97,8 @@ spec:
             port: 6767
 
     persistence:
+      config:
+        existingClaim: *app 
 
       media:
         type: nfs
