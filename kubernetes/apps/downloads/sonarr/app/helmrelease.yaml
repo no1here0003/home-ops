@@ -125,7 +125,6 @@ spec:
 
       backups:
         type: nfs
-        server: "${NAS2_ADDR}"
         path: /volume1/Kubernetes/sonarr
         globalMounts:
           - path: /config/Backups
