@@ -99,12 +99,10 @@ spec:
             secretName: prowlarr.tls
 
     persistence:
-
-      backup:
-        type: nfs
-        path: /volume1/Kubernetes/prowlarr
-        globalMounts:
-          - path: /config/Backups
+      config:
+        type: emptyDir
+      tmp:
+        type: emptyDir
 
   valuesFrom:
     - kind: Secret
