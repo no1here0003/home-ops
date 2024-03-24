@@ -23,10 +23,8 @@ spec:
     remediation:
       retries: 5
   dependsOn:
-    - name: longhorn
-      namespace: storage
-    - name: volsync
-      namespace: volsync-system
+    - name: cloudnative-pg
+      namespace: database
   values:
 
     defaultPodOptions:
@@ -43,16 +41,29 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
 
+        initContainers:
+          init-db:
+            image:
+              repository: ghcr.io/onedr0p/postgres-init
+              tag: 16
+            envFrom: &envFrom
+              - secretRef:
+                  name: prowlarr-secret
+
         containers:
           prowlarr:
             image:
               repository: ghcr.io/onedr0p/prowlarr-nightly
               tag: 1.15.0.4350
             env:
+              COMPlus_EnableDiagnostics: "0"
+              PROWLARR__INSTANCE_NAME: Prowlarr
               TZ: "America/New_York"
               PROWLARR__AUTHENTICATION_METHOD: External
               PROWLARR__PORT: &port 9696
-
+              PROWLARR__THEME: dark
+              PROWLARR__LOG_LEVEL: info
+            envFrom: *envFrom
             probes:
               liveness:
                 enabled: true
@@ -88,8 +99,6 @@ spec:
             secretName: prowlarr.tls
 
     persistence:
-      config:
-        existingClaim: *app
 
       backup:
         type: nfs
