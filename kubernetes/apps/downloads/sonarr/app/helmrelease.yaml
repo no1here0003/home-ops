@@ -2,7 +2,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: sonarr
+  name: &app sonarr
   namespace: downloads
 spec:
   interval: 30m
@@ -97,32 +97,28 @@ spec:
 
     persistence:
       config:
-        existingClaim: sonarr
+        existingClaim: *app
 
       media:
         type: nfs
-        server: "${NAS1_ADDR}"
         path: /volume1/Media
         globalMounts:
           - path: /media
 
       media2:
         type: nfs
-        server: "${NAS2_ADDR}"
         path: /volume1/Media2
         globalMounts:
           - path: /media2
 
       media3:
         type: nfs
-        server: "${NAS3_ADDR}"
         path: /volume1/Media
         globalMounts:
           - path: /media3
 
       temp:
         type: nfs
-        server: "${NAS1_ADDR}"
         path: /volume1/temp
         globalMounts:
           - path: /temp_dir
@@ -133,3 +129,29 @@ spec:
         path: /volume1/Kubernetes/sonarr
         globalMounts:
           - path: /config/Backups
+
+  valuesFrom:
+    - kind: Secret
+      name: *app
+      valuesKey: NAS1_ADDR
+      targetPath: persistence.media.server
+
+    - kind: Secret
+      name: *app
+      valuesKey: NAS1_ADDR
+      targetPath: persistence.temp.server
+
+    - kind: Secret
+      name: *app
+      valuesKey: NAS2_ADDR
+      targetPath: persistence.media2.server
+
+    - kind: Secret
+      name: *app
+      valuesKey: NAS3_ADDR
+      targetPath: persistence.media3.server
+
+    - kind: Secret
+      name: *app
+      valuesKey: NAS2_ADDR
+      targetPath: persistence.backups.server

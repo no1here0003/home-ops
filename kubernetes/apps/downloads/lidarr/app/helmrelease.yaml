@@ -84,14 +84,24 @@ spec:
 
       media:
         type: nfs
-        server: "${NAS1_ADDR}"
         path: /volume1/Media/Music
         globalMounts:
           - path: /media
 
       temp:
         type: nfs
-        server: "${NAS1_ADDR}"
         path: /volume1/temp
         globalMounts:
           - path: /temp_dir
+
+
+  valuesFrom:
+    - kind: Secret
+      name: *app
+      valuesKey: NAS1_ADDR
+      targetPath: persistence.media.server
+
+    - kind: Secret
+      name: *app
+      valuesKey: NAS1_ADDR
+      targetPath: persistence.temp.server

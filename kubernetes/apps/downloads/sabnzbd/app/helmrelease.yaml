@@ -2,7 +2,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: sabnzbd
+  name: &app sabnzbd
   namespace: downloads
 spec:
   interval: 30m
@@ -67,7 +67,7 @@ spec:
 
     service:
       sabnzbd:
-        controller: sabnzbd
+        controller: *app
         ports:
           http:
             port: *port
@@ -93,7 +93,7 @@ spec:
 
       config:
         enabled: true
-        existingClaim: sabnzbd
+        existingClaim: *app
 
       downloads:
         enabled: true
@@ -103,7 +103,6 @@ spec:
 
       temp:
         type: nfs
-        server: "${NAS1_ADDR}"
         path: /volume1/temp
         globalMounts:
           - path: /temp_dir
@@ -114,3 +113,9 @@ spec:
         cpu: 500m
       limits:
         memory: 16384Mi
+
+  valuesFrom:
+    - kind: Secret
+      name: *app
+      valuesKey: NAS1_ADDR
+      targetPath: persistence.temp.server
