@@ -29,8 +29,8 @@ spec:
   dependsOn:
     - name: intel-device-plugin-gpu
       namespace: kube-system
-    - name: longhorn
-      namespace: storage
+    - name: jellyfin
+      namespace: media
     - name: volsync
       namespace: volsync-system
   values:
@@ -121,7 +121,6 @@ spec:
 
       media:
         type: nfs
-        server: "${NAS1_ADDR}"
         path: /volume1/Media
         globalMounts:
           - path: /media
@@ -129,7 +128,6 @@ spec:
 
       media2:
         type: nfs
-        server: "${NAS2_ADDR}"
         path: /volume1/Media2
         globalMounts:
           - path: /media2
@@ -137,7 +135,6 @@ spec:
 
       media3:
         type: nfs
-        server: "${NAS3_ADDR}"
         path: /volume1/Media
         globalMounts:
           - path: /media3
@@ -145,7 +142,6 @@ spec:
 
       backups:
         type: nfs
-        server: "${NAS2_ADDR}"
         path: /volume1/Kubernetes/jellyfin
         globalMounts:
           - path: /backups
@@ -159,3 +155,24 @@ spec:
         type: emptyDir
         globalMounts:
           - path: /transcode
+
+  valuesFrom:
+    - kind: Secret
+      name: &secret jellyfin
+      valuesKey: NAS1_ADDR
+      targetPath: persistence.media.server
+
+    - kind: Secret
+      name: *secret
+      valuesKey: NAS2_ADDR
+      targetPath: persistence.media2.server
+
+    - kind: Secret
+      name: *secret
+      valuesKey: NAS3_ADDR
+      targetPath: persistence.media3.server
+
+    - kind: Secret
+      name: *secret
+      valuesKey: NAS2_ADDR
+      targetPath: persistence.backups.server
