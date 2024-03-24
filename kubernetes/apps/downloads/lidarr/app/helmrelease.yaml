@@ -49,11 +49,22 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
 
+        initContainers:
+          init-db:
+            image:
+              repository: ghcr.io/onedr0p/postgres-init
+              tag: 16
+              pullPolicy: IfNotPresent
+            envFrom: &envFrom
+              - secretRef:
+                  name: *app
+
         containers:
           lidarr:
             image:
               repository: ghcr.io/onedr0p/lidarr-develop
               tag: 2.2.3.4098@sha256:ddb5035c57005792761e60371ab7e2ca3e0804fa5ab6952266b0d5f797ed08c2
+            envFrom: *envFrom
 
     service:
       lidarr:
@@ -79,8 +90,6 @@ spec:
             secretName: lidarr.tls
 
     persistence:
-      config:
-        existingClaim: *app
 
       media:
         type: nfs
