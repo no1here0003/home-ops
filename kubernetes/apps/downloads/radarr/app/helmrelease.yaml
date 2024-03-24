@@ -105,12 +105,6 @@ spec:
         globalMounts:
           - path: /media
 
-      backups:
-        type: nfs
-        path: /volume1/Kubernetes/radarr
-        globalMounts:
-          - path: /config/Backups
-
       temp:
         type: nfs
         path: /volume1/temp
@@ -127,8 +121,3 @@ spec:
       name: *app
       valuesKey: NAS1_ADDR
       targetPath: persistence.temp.server
-
-    - kind: Secret
-      name: *app
-      valuesKey: NAS2_ADDR
-      targetPath: persistence.backups.server

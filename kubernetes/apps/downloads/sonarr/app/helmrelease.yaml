@@ -123,12 +123,6 @@ spec:
         globalMounts:
           - path: /temp_dir
 
-      backups:
-        type: nfs
-        path: /volume1/Kubernetes/sonarr
-        globalMounts:
-          - path: /config/Backups
-
   valuesFrom:
     - kind: Secret
       name: *app
@@ -150,7 +144,3 @@ spec:
       valuesKey: NAS3_ADDR
       targetPath: persistence.media3.server
 
-    - kind: Secret
-      name: *app
-      valuesKey: NAS2_ADDR
-      targetPath: persistence.backups.server

@@ -124,12 +124,6 @@ spec:
         globalMounts:
           - path: /temp_dir
 
-      backup:
-        type: nfs
-        path: /volume1/Kubernetes/bazarr
-        globalMounts:
-          - path: /config/backup
-
   valuesFrom:
     - kind: Secret
       name: *app
@@ -150,8 +144,3 @@ spec:
       name: *app
       valuesKey: NAS3_ADDR
       targetPath: persistence.media3.server
-
-    - kind: Secret
-      name: *app
-      valuesKey: NAS2_ADDR
-      targetPath: persistence.backup.server
