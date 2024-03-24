@@ -2,7 +2,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: plex
+  name: &app plex
   namespace: media
 spec:
   interval: 30m
@@ -27,7 +27,7 @@ spec:
   dependsOn:
     - name: intel-device-plugin-gpu
       namespace: kube-system
-    - name: longhorn
+    - name: minio
       namespace: storage
     - name: volsync
       namespace: volsync-system
@@ -90,7 +90,6 @@ spec:
         type: LoadBalancer
         annotations:
           io.cilium/lb-ipam-ips: ${PLEX_LB}
-          metallb.universe.tf/allow-shared-ip: plex
         externalTrafficPolicy: Cluster
         ports:
           http:
@@ -121,11 +120,10 @@ spec:
 
     persistence:
       config:
-        existingClaim: plex
+        existingClaim: *app
 
       media:
         type: nfs
-        server: "${NAS1_ADDR}"
         path: /volume1/Media
         globalMounts:
           - path: /media
@@ -133,7 +131,6 @@ spec:
 
       media2:
         type: nfs
-        server: "${NAS2_ADDR}"
         path: /volume1/Media2
         globalMounts:
           - path: /media2
@@ -141,7 +138,6 @@ spec:
 
       media3:
         type: nfs
-        server: "${NAS3_ADDR}"
         path: /volume1/Media
         globalMounts:
           - path: /media3
@@ -149,7 +145,6 @@ spec:
 
       backups:
         type: nfs
-        server: "${NAS2_ADDR}"
         path: /volume1/Kubernetes/plex
         globalMounts:
           - path: /backups
@@ -163,3 +158,24 @@ spec:
         existingClaim: plex-cache
         globalMounts:
           - path: /config/Library/Application Support/Plex Media Server/Cache
+
+  valuesFrom:
+    - kind: Secret
+      name: *app
+      valuesKey: NAS1_ADDR
+      targetPath: persistence.media.server
+
+    - kind: Secret
+      name: *app
+      valuesKey: NAS2_ADDR
+      targetPath: persistence.media2.server
+
+    - kind: Secret
+      name: *app
+      valuesKey: NAS3_ADDR
+      targetPath: persistence.media3.server
+
+    - kind: Secret
+      name: *app
+      valuesKey: NAS2_ADDR
+      targetPath: persistence.backups.server

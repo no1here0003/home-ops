@@ -49,4 +49,3 @@ data:
   NAS1_ADDR: 192.168.10.105
   NAS2_ADDR: 192.168.1.168
   NAS3_ADDR: 192.168.10.150
-  NFS_BACKUP: "nfs://192.168.1.168:/volume1/Kubernetes"
